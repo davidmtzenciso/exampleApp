@@ -1,4 +1,4 @@
-package exercise.com.clientApp;
+package com.exercise.clientApp;
 
 
 public class App {
