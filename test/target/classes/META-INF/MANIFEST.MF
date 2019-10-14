@@ -1,6 +1,13 @@
 Manifest-Version: 1.0
 Built-By: david
-Build-Jdk: 1.8.0_222
+Class-Path: lib/spring-context-5.1.10.RELEASE.jar lib/spring-aop-5.1.1
+ 0.RELEASE.jar lib/spring-beans-5.1.10.RELEASE.jar lib/spring-core-5.1
+ .10.RELEASE.jar lib/spring-jcl-5.1.10.RELEASE.jar lib/spring-expressi
+ on-5.1.10.RELEASE.jar lib/httpasyncclient-4.1.1.jar lib/httpcore-4.4.
+ 4.jar lib/httpcore-nio-4.4.4.jar lib/httpclient-4.5.1.jar lib/commons
+ -codec-1.9.jar lib/commons-logging-1.2.jar lib/jackson-databind-2.9.1
+ 0.jar lib/jackson-annotations-2.9.10.jar lib/jackson-core-2.9.10.jar
+Build-Jdk: 1.8.0_221
 Created-By: Maven Integration for Eclipse
 Main-Class: exercise.com.clientApp.App
 
