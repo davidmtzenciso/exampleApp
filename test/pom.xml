@@ -8,60 +8,6 @@
     <groupId>com.example</groupId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <licenses>
-        <license>
-            <name>MIT</name>
-            <url>https://spdx.org/licenses/MIT.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <scm>
-        <url>https://github.com/example/test</url>
-        <connection>git@github.com:example/test.git</connection>
-        <developerConnection>git@github.com:example/test.git</developerConnection>
-    </scm>
-
-    <contributors>
-        <contributor>
-            <name>Some Contributor</name>
-            <email>some.contributor@example.com</email>
-            <url>http://example.com/</url>
-            <organization>Example Organization</organization>
-            <organizationUrl>http://example.com/</organizationUrl>
-            <roles>
-                <role>scrum-master</role>
-            </roles>
-            <timezone>Europe/Amsterdam</timezone>
-        </contributor>
-        <contributor>
-            <name>Another Contributor</name>
-            <email>another.contributor@example.com</email>
-            <url>http://example.com/</url>
-            <organization>Example Organization</organization>
-            <organizationUrl>http://example.com/</organizationUrl>
-            <roles>
-                <role>product-owner</role>
-            </roles>
-            <timezone>Europe/Amsterdam</timezone>
-        </contributor>
-    </contributors>
-
-    <developers>
-        <developer>
-            <id>somedev</id>
-            <email>some.developer@example.com</email>
-            <name>Some Developer</name>
-            <organization>Example Organization</organization>
-            <organizationUrl>http://example.com/</organizationUrl>
-            <roles>
-                <role>architect</role>
-                <role>developer</role>
-            </roles>
-            <timezone>Europe/Amsterdam</timezone>
-        </developer>
-    </developers>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>exercise.com.clientApp.App</main.class>
@@ -71,16 +17,7 @@
         <maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
         <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
+    
     <build>
         <plugins>
             <plugin>
