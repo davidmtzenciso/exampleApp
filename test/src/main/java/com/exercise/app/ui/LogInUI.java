@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.exercise.app.controller.LogInUIController;
 import com.exercise.app.exceptions.LoginFailedException;
 import com.exercise.app.model.Credentials;
-import com.exercise.clientApp.controller.LogInUIController;
 
 
 public class LogInUI {

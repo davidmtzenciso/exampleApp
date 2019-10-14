@@ -1,4 +1,4 @@
-package com.exercise.clientApp.controller;
+package com.exercise.app.controller;
 
 
 import java.io.IOException;

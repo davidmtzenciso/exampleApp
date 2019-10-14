@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import com.exercise.app.controller.LogInUIController;
 import com.exercise.app.ui.HomeUI;
 import com.exercise.app.ui.LogInUI;
-import com.exercise.clientApp.controller.LogInUIController;
 
 @Configuration
 public class AppConfig {
