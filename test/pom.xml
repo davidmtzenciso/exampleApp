@@ -12,12 +12,38 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>exercise.com.clientApp.App</main.class>
         <java.version>8</java.version>
-        <junit.jupiter.version>5.4.2</junit.jupiter.version>
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
         <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
+        <spring.version>5.1.10.RELEASE</spring.version>
+        <httpasyncclient.version>4.1.1</httpasyncclient.version>
+        <jackson.version>2.9.10</jackson.version>
     </properties>
+<<<<<<< HEAD
     
+=======
+	<dependencies>
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context</artifactId>
+		    <version>${spring.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpasyncclient -->
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpasyncclient</artifactId>
+		    <version>${httpasyncclient.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+		
+	</dependencies>
+	
+>>>>>>> refs/heads/develop
     <build>
         <plugins>
             <plugin>
