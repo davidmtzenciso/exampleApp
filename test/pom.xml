@@ -19,9 +19,7 @@
         <httpasyncclient.version>4.1.1</httpasyncclient.version>
         <jackson.version>2.9.10</jackson.version>
     </properties>
-<<<<<<< HEAD
-    
-=======
+
 	<dependencies>
 		<dependency>
 		    <groupId>org.springframework</groupId>
@@ -43,7 +41,6 @@
 		
 	</dependencies>
 	
->>>>>>> refs/heads/develop
     <build>
         <plugins>
             <plugin>
