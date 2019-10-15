@@ -13,8 +13,13 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private AccountRepository repository;
 	
+	@Override
 	public Account createAccount(Account entity) {
 		return this.repository.save(entity);
 	}
 	
+	@Override
+	public Account getAccountbyIdNPin(Long id, Integer pin) {
+		return repository.findByIdAndPin(id, pin);
+	}
 }

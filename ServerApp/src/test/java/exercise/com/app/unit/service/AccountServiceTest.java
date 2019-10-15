@@ -29,6 +29,17 @@ public class AccountServiceTest  {
 	
 	private Account savedAccount;
 	
+	@Test
+	public void testFindByIdAndPinExistent() {
+		when(repositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(new Account());
+		Assert.assertNotNull(this.repositoryMock.findByIdAndPin(new Long(1), 1234));
+	}
+	
+	@Test
+	public void testFindByIdAndPinnonExistent() {
+		when(repositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(null);
+		Assert.assertNull(this.repositoryMock.findByIdAndPin(new Long(1), 1234));
+	}
 
 	@Test(expected = DataIntegrityViolationException.class)
 	public void testSaveWithoutFirstName() {
