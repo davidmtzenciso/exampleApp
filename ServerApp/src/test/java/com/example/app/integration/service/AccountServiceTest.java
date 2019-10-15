@@ -14,7 +14,6 @@ import com.example.app.model.Account;
 import com.example.app.service.AccountService;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
 public class AccountServiceTest implements InitAccount {
 
 	@Autowired

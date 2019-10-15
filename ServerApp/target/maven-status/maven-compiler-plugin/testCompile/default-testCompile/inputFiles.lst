@@ -1,8 +1,9 @@
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\InitAccount.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\integration\service\AccountServiceTest.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\CucumberTest.java
-C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\features\steps\CreateAccountSteps.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\integration\cucumber\CreateAccountSteps.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\unit\controller\DebitsCheckControllerTest.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\unit\service\AccountServiceTest.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\DataTableConfigurer.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\unit\repository\AccountRepositoryTest.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\TestContext.java
