@@ -1,6 +1,7 @@
 package com.example.app.model;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -17,6 +18,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.example.app.model.Transaction;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Component
 @Scope("prototype")
@@ -47,8 +50,9 @@ public class Account implements Serializable {
 	@OneToMany(mappedBy="account", fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
 	private Set<Transaction> transactions;
 	
-	private static final long serialVersionUID = 1L;
-	
+	@JsonIgnore
+	private static final long serialVersionUID = -1051181485163125999L;
+		
 	public Account() {}
 
 	public Account(Long id, Integer pin, String firstName, String lastName, String accountHoldersId, Double balance) {
@@ -112,6 +116,7 @@ public class Account implements Serializable {
 		return transactions;
 	}
 
+	@JsonDeserialize(as=LinkedHashSet.class)
 	public void setTransactions(Set<Transaction> transactions) {
 		this.transactions = transactions;
 	}

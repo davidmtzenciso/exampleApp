@@ -11,13 +11,14 @@ import org.springframework.stereotype.Component;
 
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Component
 @Scope("prototype")
 @Entity
 @Table(name="transaction")
 public class Transaction implements Serializable {
-
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +38,11 @@ public class Transaction implements Serializable {
 	@Column(nullable=false, length=50)
 	private String description;
 	
-	@ManyToOne()
 	@JoinColumn(name="account_id")
+	@JsonBackReference
 	private Account account;
 	
+	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 	
 	
