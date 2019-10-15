@@ -8,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -26,20 +25,21 @@ public class AccountServiceTest  {
 	@Autowired
 	private AccountService service;
 	
+	@Autowired
 	private Account newAccount;
 	
 	private Account savedAccount;
 	
 	@Test
 	public void testFindByIdAndPinExistent() {
-		when(repositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(new Account());
-		Assert.assertNotNull(this.repositoryMock.findByIdAndPin(new Long(1), 1234));
+		when(repositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(this.newAccount);
+		Assert.assertNotNull(this.service.getAccountbyIdNPin(new Long(1), 1234));
 	}
 	
 	@Test
 	public void testFindByIdAndPinnonExistent() {
 		when(repositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(null);
-		Assert.assertNull(this.repositoryMock.findByIdAndPin(new Long(1), 1234));
+		Assert.assertNull(this.service.getAccountbyIdNPin(new Long(1), 1234));
 	}
 
 	@Test(expected = DataIntegrityViolationException.class)

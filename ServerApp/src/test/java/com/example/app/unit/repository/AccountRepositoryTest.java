@@ -42,7 +42,7 @@ public class AccountRepositoryTest implements InitAccount {
 	@Test
 	public void testFindByIdAndPinExisting() {
 		this.saved = this.repository.save(this.newAccount);
-		Assert.assertNotNull(this.repository.findByIdAndPin(new Long(1), 1234));
+		Assert.assertNotNull(this.repository.findByIdAndPin(this.saved.getId(), this.saved.getPin()));
 	}
 	
 	@Test(expected = EmptyResultDataAccessException.class)

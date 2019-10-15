@@ -9,8 +9,6 @@ import java.util.LinkedHashSet;
 
 import javax.annotation.PostConstruct;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
