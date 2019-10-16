@@ -1,8 +1,9 @@
-C:\Users\david\git\exercise\ServerApp\src\test\java\exercise\com\app\features\steps\CreateAccountSteps.java
-C:\Users\david\git\exercise\ServerApp\src\test\java\exercise\com\app\integration\service\AccountServiceTest.java
-C:\Users\david\git\exercise\ServerApp\src\test\java\exercise\com\app\unit\service\AccountServiceTest.java
-C:\Users\david\git\exercise\ServerApp\src\test\java\exercise\com\app\conf\CucumberTest.java
-C:\Users\david\git\exercise\ServerApp\src\test\java\exercise\com\app\conf\InitAccount.java
-C:\Users\david\git\exercise\ServerApp\src\test\java\exercise\com\app\unit\repository\AccountRepositoryTest.java
-C:\Users\david\git\exercise\ServerApp\src\test\java\exercise\com\app\conf\DataTableConfigurer.java
-C:\Users\david\git\exercise\ServerApp\src\test\java\exercise\com\app\unit\controller\DebitsCheckControllerTest.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\InitAccount.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\integration\service\AccountServiceTest.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\CucumberTest.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\TestConfig.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\integration\controller\CreateAccountSteps.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\unit\controller\DebitsCheckControllerTest.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\unit\service\AccountServiceTest.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\DataTableConfigurer.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\unit\repository\AccountRepositoryTest.java
