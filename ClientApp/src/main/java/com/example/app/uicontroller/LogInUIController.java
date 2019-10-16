@@ -1,4 +1,4 @@
-package com.exercise.app.ui.controller;
+package com.example.app.uicontroller;
 
 
 import java.io.IOException;
@@ -10,10 +10,10 @@ import java.util.logging.Logger;
 import org.apache.http.HttpEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.exercise.app.exceptions.RequestFailedException;
-import com.exercise.app.model.Account;
-import com.exercise.app.model.Credentials;
-import com.exercise.app.util.HttpClient;
+import com.example.app.exceptions.RequestFailedException;
+import com.example.app.model.Account;
+import com.example.app.model.Credentials;
+import com.example.app.util.HttpClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

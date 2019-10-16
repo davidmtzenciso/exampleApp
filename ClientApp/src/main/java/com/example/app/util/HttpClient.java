@@ -1,4 +1,4 @@
-package com.exercise.app.util;
+package com.example.app.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -12,7 +12,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 
-import com.exercise.app.exceptions.RequestFailedException;
+import com.example.app.exceptions.RequestFailedException;
 
 public interface HttpClient {
 	

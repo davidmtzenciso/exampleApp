@@ -1,4 +1,4 @@
-package com.exercise.app.exceptions;
+package com.example.app.exceptions;
 
 public class AttemptsExceededException extends Exception {
 

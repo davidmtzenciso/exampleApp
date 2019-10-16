@@ -1,4 +1,4 @@
-package com.exercise.app.exceptions;
+package com.example.app.exceptions;
 
 public class RequestFailedException extends Exception {
 
