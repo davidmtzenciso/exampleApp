@@ -17,7 +17,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>exercise.com.app.App</start-class>
+        <start-class>com.example.app.App</start-class>
         <java.version>1.8</java.version>
         <spring.loaded.version>1.2.8.RELEASE</spring.loaded.version>
         <lombok.version>1.14.8</lombok.version>

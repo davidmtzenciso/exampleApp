@@ -3,5 +3,5 @@ Implementation-Title: ServerApp
 Implementation-Version: 0.0.1-SNAPSHOT
 Build-Jdk-Spec: 1.8
 Created-By: Maven Integration for Eclipse
-Main-Class: exercise.com.app.App
+Main-Class: com.example.app.App
 
