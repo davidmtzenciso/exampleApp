@@ -11,7 +11,6 @@ public class Account implements Serializable {
 	private Integer pin;
 	private String accountHoldersName;
 	private Double balance;
-	private Credentials credentials;
 	private List<Transaction> transactions;
 	private static final long serialVersionUID = -2209620568224742038L;
 	
@@ -50,12 +49,6 @@ public class Account implements Serializable {
 	}
 	public void setBalance(Double balance) {
 		this.balance = balance;
-	}
-	public Credentials getCredentials() {
-		return credentials;
-	}
-	public void setCredentials(Credentials credentials) {
-		this.credentials = credentials;
 	}
 	public List<Transaction> getTransactions() {
 		return transactions;
