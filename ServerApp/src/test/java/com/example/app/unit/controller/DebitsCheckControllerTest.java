@@ -21,7 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.app.conf.DataInitialization;
-import com.example.app.controller.DebitsCheckController;
+import com.example.app.controller.AccountController;
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
 import com.example.app.service.AccountService;
@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @ComponentScan(basePackages = { "com.example.app.conf", "com.example.app.controller", "com.example.app.service"}) 
-@WebMvcTest(DebitsCheckController.class)
+@WebMvcTest(AccountController.class)
 public class DebitsCheckControllerTest implements DataInitialization {
 
 	 @Autowired
@@ -68,7 +68,7 @@ public class DebitsCheckControllerTest implements DataInitialization {
 
 	 @Test
 	 public void testCorrectPost() throws JsonProcessingException, Exception  {
-		 when(accountService.createAccount(this.newAccount)).thenReturn(this.newAccount);
+		 when(accountService.save(this.newAccount)).thenReturn(this.newAccount);
 		 
 		 mockMvc.perform(post(API_VERSION + URI_MODULE + URI_POST_ACCOUNT)
 				        .contentType(MediaType.APPLICATION_JSON_UTF8)

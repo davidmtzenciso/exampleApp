@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.app.conf.DataInitialization;
 import com.example.app.exception.InsuficientFundsException;
+import com.example.app.exception.OverdrawnAccountException;
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
 import com.example.app.repository.AccountRepository;
@@ -48,11 +49,30 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test
+	public void testDeleteNonOverdrawalExistingAccount() throws OverdrawnAccountException {
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
+		this.service.deleteAccount(new Long(1));
+	}
+	
+	@Test(expected = OverdrawnAccountException.class)
+	public void testDeleteOverdrawalExistingAccount() throws OverdrawnAccountException {
+		this.newAccount.setBalance(-10.0);
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
+		this.service.deleteAccount(new Long(1));
+	}
+	
+	@Test(expected = OverdrawnAccountException.class)
+	public void testDeleteNonExistingAccount() throws OverdrawnAccountException {
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
+		this.service.deleteAccount(new Long(1));
+	}
+		
+	@Test
 	public void saveTransactionWithCorrectAmount() throws InsuficientFundsException {
 		this.newAccount.setId(new Long(1));
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
 		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
-		Assert.assertTrue(service.saveTransaction(this.transaction).getBalance() >= 0);
+		Assert.assertTrue(service.save(this.transaction).getBalance() >= 0);
 	}
 	
 	@Test(expected = InsuficientFundsException.class)
@@ -61,7 +81,7 @@ public class AccountServiceTest implements DataInitialization  {
 		this.transaction.setAmount(2000.0);
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
 		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
-		this.service.saveTransaction(this.transaction);
+		this.service.save(this.transaction);
 	}
 	
 	@Test
@@ -79,25 +99,25 @@ public class AccountServiceTest implements DataInitialization  {
 	@Test(expected = DataIntegrityViolationException.class)
 	public void testSaveWithoutFirstName() {
 		when(accountRepositoryMock.save(this.newAccount)).thenThrow(DataIntegrityViolationException.class);
-		this.savedAccount = service.createAccount(this.newAccount);
+		this.savedAccount = service.save(this.newAccount);
 	}
 	
 	@Test(expected = DataIntegrityViolationException.class)
 	public void testSaveWithoutLastName() {
 		when(accountRepositoryMock.save(this.newAccount)).thenThrow(DataIntegrityViolationException.class);
-		this.savedAccount = service.createAccount(this.newAccount);
+		this.savedAccount = service.save(this.newAccount);
 	}
 	
 	@Test(expected = DataIntegrityViolationException.class)
 	public void testSaveWithoutPin() {
 		when(accountRepositoryMock.save(this.newAccount)).thenThrow(DataIntegrityViolationException.class);
-		this.savedAccount = service.createAccount(this.newAccount);
+		this.savedAccount = service.save(this.newAccount);
 	}
 	
 	@Test
 	public void testSaveWillAllPropertiesAccount() {
 		when(accountRepositoryMock.save(this.newAccount)).thenReturn(new Account());
-		this.savedAccount = service.createAccount(this.newAccount);
+		this.savedAccount = service.save(this.newAccount);
 		Assert.assertNotNull(this.savedAccount);
 	}
 	

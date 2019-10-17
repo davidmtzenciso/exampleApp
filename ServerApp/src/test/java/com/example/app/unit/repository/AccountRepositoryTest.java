@@ -34,8 +34,9 @@ public class AccountRepositoryTest implements DataInitialization {
 	
 	@After
 	public void clean() {
-		if(saved != null) {
+		if(this.saved != null) {
 			this.repository.deleteById(this.saved.getId());
+			this.saved = null;
 		}
 	}
 	
@@ -52,10 +53,17 @@ public class AccountRepositoryTest implements DataInitialization {
 		Assert.assertNotNull(lockedAccount);
 	}
 	
+	@Test
 	public void testFindAndLockByIdWithlocked() {
 		this.saved = this.repository.save(this.newAccount);
 		Account lockedAccount = this.repository.findAndLockById(this.saved.getId());
 		Assert.assertNotNull(lockedAccount);
+	}
+	
+	@Test
+	public void testFindAndLockByIdNonExistent() {
+		Account lockedAccount = this.repository.findAndLockById(new Long(1));
+		Assert.assertNull(lockedAccount);
 	}
 	
 	@Test(expected = EmptyResultDataAccessException.class)
@@ -63,10 +71,10 @@ public class AccountRepositoryTest implements DataInitialization {
 		this.repository.deleteById(new Long(0));
 	}
 	
+	@Test
 	public void testDeleteExisting() {
 		this.saved = this.repository.save(this.newAccount);
-		this.repository.deleteById(saved.getId());
-		Assert.assertFalse(repository.findById(this.saved.getId()).isPresent());
+		this.repository.deleteById(this.saved.getId());
 	}
 	
 	@Test
