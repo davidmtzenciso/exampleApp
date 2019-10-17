@@ -5,9 +5,8 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.example.app.controller.LogInUIController;
-import com.example.app.exceptions.LoginFailedException;
 import com.example.app.model.Credentials;
+import com.example.app.uicontroller.LogInUIController;
 
 
 public class LogInUI {
@@ -51,10 +50,7 @@ public class LogInUI {
 				System.err.println("Input Error, please try again");
 			} catch(NumberFormatException e) {
 				System.err.println("invalid entry, it's not a number\n");
-			} catch(LoginFailedException e) {
-				System.err.println(e.getMessage());
 			}
-			
 		} while(option != 2);
 	}
 }

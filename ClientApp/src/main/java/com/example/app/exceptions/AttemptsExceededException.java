@@ -1,14 +1,15 @@
 package com.example.app.exceptions;
 
-public class LoginFailedException extends Exception {
+public class AttemptsExceededException extends Exception {
 
-	private final String message;
+
 	private static final long serialVersionUID = 1L;
+	private final String message;
 	
-	public LoginFailedException(String message) {
+	public AttemptsExceededException(String message) {
 		this.message = message;
 	}
-
+	
 	@Override
 	public String getMessage() {
 		return this.message;

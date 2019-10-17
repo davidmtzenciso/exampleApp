@@ -1,21 +1,25 @@
 package com.example.app.model;
 
-public class Credentials {
+import java.io.Serializable;
 
-	private Long accountNumber;
+public class Credentials implements Serializable {
+
+	private static final long serialVersionUID = -2468920800107022005L;
+	private Long accountNum;
 	private Integer pin;
 	
-	public Credentials(Long accountNumber, Integer pin) {
+	public Credentials() {}
+	
+	public Credentials(Long accountNum, Integer pin) {
 		super();
-		this.accountNumber = accountNumber;
+		this.accountNum = accountNum;
 		this.pin = pin;
 	}
-	
-	public Long getAccountNumber() {
-		return accountNumber;
+	public Long getAccountNum() {
+		return accountNum;
 	}
-	public void setAccountNumber(Long accountNumber) {
-		this.accountNumber = accountNumber;
+	public void setAccountNum(Long accountNum) {
+		this.accountNum = accountNum;
 	}
 	public Integer getPin() {
 		return pin;
@@ -23,5 +27,6 @@ public class Credentials {
 	public void setPin(Integer pin) {
 		this.pin = pin;
 	}
-
+	
+	
 }

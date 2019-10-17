@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
-import com.example.app.controller.LogInUIController;
 import com.example.app.ui.HomeUI;
 import com.example.app.ui.LogInUI;
+import com.example.app.uicontroller.LogInUIController;
 
 @Configuration
 public class AppConfig {
