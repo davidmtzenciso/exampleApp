@@ -38,6 +38,7 @@ public class Transaction implements Serializable {
 	@Column(nullable=false, length=50)
 	private String description;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="account_id")
 	@JsonBackReference
 	private Account account;

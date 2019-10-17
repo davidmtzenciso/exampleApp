@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.app.conf.DataInitialization;
+import com.example.app.exception.AccountNotFoundException;
 import com.example.app.exception.InsuficientFundsException;
 import com.example.app.exception.OverdrawnAccountException;
 import com.example.app.model.Account;
@@ -49,26 +50,26 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test
-	public void testDeleteNonOverdrawalExistingAccount() throws OverdrawnAccountException {
+	public void testDeleteNonOverdrawalExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
 		this.service.deleteAccount(new Long(1));
 	}
 	
 	@Test(expected = OverdrawnAccountException.class)
-	public void testDeleteOverdrawalExistingAccount() throws OverdrawnAccountException {
+	public void testDeleteOverdrawnExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
 		this.newAccount.setBalance(-10.0);
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
 		this.service.deleteAccount(new Long(1));
 	}
 	
-	@Test(expected = OverdrawnAccountException.class)
-	public void testDeleteNonExistingAccount() throws OverdrawnAccountException {
+	@Test(expected = AccountNotFoundException.class)
+	public void testDeleteNonExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
 		this.service.deleteAccount(new Long(1));
 	}
 		
 	@Test
-	public void saveTransactionWithCorrectAmount() throws InsuficientFundsException {
+	public void saveTransactionWithCorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
 		this.newAccount.setId(new Long(1));
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
 		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
@@ -76,7 +77,7 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test(expected = InsuficientFundsException.class)
-	public void saveTransactionWithInCorrectAmount() throws InsuficientFundsException {
+	public void saveTransactionWithIncorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
 		this.newAccount.setId(new Long(1));
 		this.transaction.setAmount(2000.0);
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
@@ -84,16 +85,23 @@ public class AccountServiceTest implements DataInitialization  {
 		this.service.save(this.transaction);
 	}
 	
+	@Test(expected = AccountNotFoundException.class)
+	public void saveTransactionWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException {
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
+		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
+		this.service.save(this.transaction);
+	}
+	
 	@Test
-	public void testFindByIdAndPinExistent() {
+	public void testFindByIdAndPinExistent() throws AccountNotFoundException {
 		when(accountRepositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(this.newAccount);
 		Assert.assertNotNull(this.service.getAccountbyIdNPin(new Long(1), 1234));
 	}
 	
-	@Test
-	public void testFindByIdAndPinNonExistent() {
+	@Test(expected = AccountNotFoundException.class)
+	public void testFindByIdAndPinNonExistent() throws AccountNotFoundException {
 		when(accountRepositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(null);
-		Assert.assertNull(this.service.getAccountbyIdNPin(new Long(1), 1234));
+		this.service.getAccountbyIdNPin(new Long(1), 1234);
 	}
 
 	@Test(expected = DataIntegrityViolationException.class)
@@ -115,7 +123,7 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test
-	public void testSaveWillAllPropertiesAccount() {
+	public void testSaveWithAllProperties() {
 		when(accountRepositoryMock.save(this.newAccount)).thenReturn(new Account());
 		this.savedAccount = service.save(this.newAccount);
 		Assert.assertNotNull(this.savedAccount);

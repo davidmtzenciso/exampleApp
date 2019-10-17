@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.app.exception.InsuficientFundsException;
 import com.example.app.exception.OverdrawnAccountException;
+import com.example.app.exception.AccountNotFoundException;
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
 import com.example.app.service.AccountService;
@@ -42,7 +43,7 @@ public class AccountController {
 	public @ResponseBody String deleteAccount(@RequestParam Long id) {
 		try {
 			return this.accountService.deleteAccount(id);
-		}catch(OverdrawnAccountException e) {
+		}catch(OverdrawnAccountException | AccountNotFoundException e) {
 			return e.getMessage();
 		}
 	}
@@ -51,7 +52,11 @@ public class AccountController {
 					consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, 
 					produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody Account authenticate(@RequestBody Account accountCredentials) {
-		return this.accountService.getAccountbyIdNPin(accountCredentials.getId(), accountCredentials.getPin());
+		try {
+			return this.accountService.getAccountbyIdNPin(accountCredentials.getId(), accountCredentials.getPin());
+		} catch (AccountNotFoundException e) {
+			return null;
+		}
 	}
 	
 	@RequestMapping(value = "/deposit", method = RequestMethod.POST,	
@@ -60,7 +65,7 @@ public class AccountController {
 	public @ResponseBody Account makeDeposit(@RequestBody Transaction operation) {
 		try {
 			return this.accountService.save(operation);
-		} catch(InsuficientFundsException e) {
+		} catch(InsuficientFundsException | AccountNotFoundException e) {
 			return null;
 		}
 	}
@@ -71,7 +76,7 @@ public class AccountController {
 	public @ResponseBody Account makeWithdrawal(@RequestBody Transaction operation) {
 		try {
 			return this.accountService.save(operation);
-		} catch(InsuficientFundsException e) {
+		} catch(InsuficientFundsException | AccountNotFoundException e) {
 			return null;
 		}
 	}
@@ -79,8 +84,12 @@ public class AccountController {
 	@RequestMapping(value="/balance", method = RequestMethod.GET,
 			consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, 
 			produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody Double getBalance(@RequestParam Long id) {
-		return accountService.getBalance(id);
+	public @ResponseBody String getBalance(@RequestParam Long id) {
+		try {
+			return String.valueOf(accountService.getBalance(id));
+		} catch (AccountNotFoundException e) {
+			return e.getMessage();
+		}
 	}
 	
 	@RequestMapping(value = "/debits-check", method = RequestMethod.GET,

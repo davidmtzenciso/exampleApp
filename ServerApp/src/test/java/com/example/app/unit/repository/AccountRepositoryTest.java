@@ -75,11 +75,7 @@ public class AccountRepositoryTest implements DataInitialization {
 	public void testDeleteExisting() {
 		this.saved = this.repository.save(this.newAccount);
 		this.repository.deleteById(this.saved.getId());
-	}
-	
-	@Test
-	public void testFindbyIdAndPinOfNonExistent() {
-		Assert.assertNull(this.repository.findByIdAndPin(new Long(0), 0));
+		this.saved = null;
 	}
 	
 	@Test(expected = DataIntegrityViolationException.class)
