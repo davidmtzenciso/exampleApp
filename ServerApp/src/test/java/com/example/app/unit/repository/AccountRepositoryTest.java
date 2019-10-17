@@ -11,13 +11,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.example.app.conf.InitAccount;
+import com.example.app.conf.DataInitialization;
 import com.example.app.model.Account;
 import com.example.app.repository.AccountRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AccountRepositoryTest implements InitAccount {
+public class AccountRepositoryTest implements DataInitialization {
 
 	@Autowired
 	private AccountRepository repository;
@@ -35,7 +35,7 @@ public class AccountRepositoryTest implements InitAccount {
 	@After
 	public void clean() {
 		if(saved != null) {
-			this.repository.delete(this.saved);
+			this.repository.deleteById(this.saved.getId());
 		}
 	}
 	
@@ -45,20 +45,33 @@ public class AccountRepositoryTest implements InitAccount {
 		Assert.assertNotNull(this.repository.findByIdAndPin(this.saved.getId(), this.saved.getPin()));
 	}
 	
+	@Test
+	public void testFindAndLockByIdWithUnlocked() {
+		this.saved = this.repository.save(this.newAccount);
+		Account lockedAccount = this.repository.findAndLockById(this.saved.getId());
+		Assert.assertNotNull(lockedAccount);
+	}
+	
+	public void testFindAndLockByIdWithlocked() {
+		this.saved = this.repository.save(this.newAccount);
+		Account lockedAccount = this.repository.findAndLockById(this.saved.getId());
+		Assert.assertNotNull(lockedAccount);
+	}
+	
 	@Test(expected = EmptyResultDataAccessException.class)
 	public void testDeleteNonExisting() {
-		this.repository.deleteById(new Long(1));
+		this.repository.deleteById(new Long(0));
 	}
 	
 	public void testDeleteExisting() {
 		this.saved = this.repository.save(this.newAccount);
-		this.repository.deleteById(this.saved.getId());
+		this.repository.deleteById(saved.getId());
 		Assert.assertFalse(repository.findById(this.saved.getId()).isPresent());
 	}
 	
 	@Test
 	public void testFindbyIdAndPinOfNonExistent() {
-		Assert.assertNull(this.repository.findByIdAndPin(new Long(1), 1234));
+		Assert.assertNull(this.repository.findByIdAndPin(new Long(0), 0));
 	}
 	
 	@Test(expected = DataIntegrityViolationException.class)

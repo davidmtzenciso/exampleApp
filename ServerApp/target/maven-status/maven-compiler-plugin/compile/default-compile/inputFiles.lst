@@ -1,6 +1,7 @@
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\main\java\com\example\app\controller\DebitsCheckController.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\main\java\com\example\app\repository\AccountRepository.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\main\java\com\example\app\repository\TransactionRepository.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\main\java\com\example\app\exception\InsuficientFundsException.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\main\java\com\example\app\App.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\main\java\com\example\app\service\AccountService.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\main\java\com\example\app\serviceImpl\AccountServiceImpl.java

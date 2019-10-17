@@ -9,13 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.example.app.conf.InitAccount;
+import com.example.app.conf.DataInitialization;
 import com.example.app.model.Account;
 import com.example.app.service.AccountService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AccountServiceTest implements InitAccount {
+public class AccountServiceTest implements DataInitialization {
 
 	@Autowired
 	private AccountService service;

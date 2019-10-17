@@ -20,7 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.app.conf.InitAccount;
+import com.example.app.conf.DataInitialization;
 import com.example.app.controller.DebitsCheckController;
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 @ComponentScan(basePackages = { "com.example.app.conf", "com.example.app.controller", "com.example.app.service"}) 
 @WebMvcTest(DebitsCheckController.class)
-public class DebitsCheckControllerTest implements InitAccount {
+public class DebitsCheckControllerTest implements DataInitialization {
 
 	 @Autowired
 	 private MockMvc mockMvc;
