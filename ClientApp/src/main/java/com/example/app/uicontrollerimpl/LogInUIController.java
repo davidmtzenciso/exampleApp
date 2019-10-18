@@ -27,7 +27,7 @@ public class LogInUIController implements UIController, HttpCommunication {
 	private Object data;
 	private Consumer<String> onSuccess;
 	private Consumer<String> onError;
-	private CloseableHttpAsyncClient client;
+	//private CloseableHttpAsyncClient client;
 	
 	@Override
 	public UIController setData(Object data) {

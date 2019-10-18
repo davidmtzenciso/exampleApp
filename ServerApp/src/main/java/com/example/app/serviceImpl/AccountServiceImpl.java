@@ -3,9 +3,11 @@ package com.example.app.serviceImpl;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.example.app.exception.AccountNotFoundException;
+import com.example.app.exception.FailedEntityValidationException;
 import com.example.app.exception.InsuficientFundsException;
 import com.example.app.exception.OverdrawnAccountException;
 import com.example.app.model.Account;
@@ -17,7 +19,11 @@ import com.example.app.service.AccountService;
 @Service
 public class AccountServiceImpl implements AccountService {
 	
-	private final String NOT_FOUND = "Account not found by id ";
+	private final String NOT_FOUND = "Account not found";
+	private final String OVERDRAWN = "Account's balance negative, unable to close";
+	private final String INSUFICIENT_FUNDS = "Operation unsuccessful, insuficient funds";
+	private final String LOGIN_FAILED = "Invalid account number or pin, please try again";
+	private final String FAILED_VALIDATION = "Unabñle to open account, Invalid data or missing required fields";
 
 	@Autowired
 	private AccountRepository accountRepository;
@@ -26,8 +32,13 @@ public class AccountServiceImpl implements AccountService {
 	private TransactionRepository transactionRepository;
 	
 	@Override
-	public Account save(Account entity) {
-		return this.accountRepository.save(entity);
+	public Account save(Account entity) throws FailedEntityValidationException {
+		entity.setId(null);
+		try {
+			return this.accountRepository.save(entity);
+		} catch(DataIntegrityViolationException e) {
+			throw new FailedEntityValidationException(FAILED_VALIDATION);
+		}
 	}
 	
 	@Override
@@ -40,19 +51,19 @@ public class AccountServiceImpl implements AccountService {
 					return "Account closed!";
 				}
 				else {
-					throw new OverdrawnAccountException("Account's balance negative, unable to close");
+					throw new OverdrawnAccountException(OVERDRAWN);
 				}
 			} else {
-				throw new AccountNotFoundException(NOT_FOUND + id);
+				throw new AccountNotFoundException(NOT_FOUND);
 			}
 	}
 	
 	@Override
-	public double getBalance(Long id) throws AccountNotFoundException  {
+	public Double getBalance(Long id) throws AccountNotFoundException  {
 		try {
 			return accountRepository.findById(id).get().getBalance();
 		} catch(NoSuchElementException e) {
-			throw new AccountNotFoundException(NOT_FOUND + id);
+			throw new AccountNotFoundException(NOT_FOUND);
 		}
 	}
 	
@@ -62,27 +73,37 @@ public class AccountServiceImpl implements AccountService {
 		if(account != null) {
 			return account;
 		} else {
-			throw new AccountNotFoundException(NOT_FOUND + id + " and PIN: " + pin);
+			throw new AccountNotFoundException(LOGIN_FAILED);
 		}
 	}
 	
 	@Override
-	public Account save(Transaction transaction) throws InsuficientFundsException, AccountNotFoundException  {
+	public Transaction makeDeposit(Transaction transaction) throws AccountNotFoundException {
 		Account lockedAccount = accountRepository.findAndLockById(transaction.getAccount().getId());
+		Transaction saved;
+		
+		if(lockedAccount != null) {
+			saved = transactionRepository.save(transaction);
+			lockedAccount.setBalance(lockedAccount.getBalance() + transaction.getAmount());
+			return saved;
+		} else { 
+			throw new AccountNotFoundException(NOT_FOUND + transaction.getAccount().getId());
+		}
+	}
+	
+	@Override
+	public Transaction makeWithdrawal(Transaction transaction) throws InsuficientFundsException, AccountNotFoundException  {
+		Account lockedAccount = accountRepository.findAndLockById(transaction.getAccount().getId());
+		Transaction saved;  
 		
 		if(lockedAccount != null ) {
-			if(transaction.getType() == DEPOSIT) {
-				transactionRepository.save(transaction);
-				lockedAccount.setBalance(lockedAccount.getBalance() + transaction.getAmount());
-				return lockedAccount;
-			} 
-			else if(lockedAccount.getBalance() >= transaction.getAmount()) {
-				transactionRepository.save(transaction);
+			if(lockedAccount.getBalance() >= transaction.getAmount()) {
+				saved = transactionRepository.save(transaction);
 				lockedAccount.setBalance(lockedAccount.getBalance() - transaction.getAmount());
-				return lockedAccount;
+				return saved;
 			} 
 			else { 
-				throw new InsuficientFundsException("operation unsuccessful, insuficient funds" + lockedAccount.getId());
+				throw new InsuficientFundsException(INSUFICIENT_FUNDS + lockedAccount.getId());
 			}
 		} else {
 			throw new AccountNotFoundException(NOT_FOUND + transaction.getAccount().getId());

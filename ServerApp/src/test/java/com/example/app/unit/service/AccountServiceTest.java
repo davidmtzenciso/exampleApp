@@ -2,6 +2,9 @@ package com.example.app.unit.service;
 
 import static org.mockito.Mockito.when;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.app.conf.DataInitialization;
 import com.example.app.exception.AccountNotFoundException;
+import com.example.app.exception.FailedEntityValidationException;
 import com.example.app.exception.InsuficientFundsException;
 import com.example.app.exception.OverdrawnAccountException;
 import com.example.app.model.Account;
@@ -36,7 +40,7 @@ public class AccountServiceTest implements DataInitialization  {
 	private AccountService service;
 	
 	@Autowired
-	private Account newAccount;
+	private Account account;
 	
 	@Autowired
 	private Transaction transaction;
@@ -45,20 +49,49 @@ public class AccountServiceTest implements DataInitialization  {
 	
 	@Before
 	public void init() {
-		this.newAccount = this.initialize(this.newAccount);
-		this.transaction = this.initialize(this.transaction, this.newAccount);
+		this.account = this.initialize(this.account);
+		this.transaction = this.initialize(this.transaction, this.account);
+	}
+	
+	// 		SAVE ACCOUNT TEST
+	
+	@Test(expected = FailedEntityValidationException.class)
+	public void testSaveWithoutFirstName() throws FailedEntityValidationException {
+		when(accountRepositoryMock.save(this.account)).thenThrow(DataIntegrityViolationException.class);
+		this.savedAccount = service.save(this.account);
+	}
+	
+	@Test(expected = FailedEntityValidationException.class)
+	public void testSaveWithoutLastName() throws FailedEntityValidationException {
+		when(accountRepositoryMock.save(this.account)).thenThrow(DataIntegrityViolationException.class);
+		this.savedAccount = service.save(this.account);
+	}
+	
+	@Test(expected = FailedEntityValidationException.class)
+	public void testSaveWithoutPin() throws FailedEntityValidationException {
+		when(accountRepositoryMock.save(this.account)).thenThrow(DataIntegrityViolationException.class);
+		this.savedAccount = service.save(this.account);
 	}
 	
 	@Test
+	public void testSaveWithAllProperties() throws FailedEntityValidationException {
+		when(accountRepositoryMock.save(this.account)).thenReturn(this.account);
+		this.savedAccount = service.save(this.account);
+		Assert.assertNotNull(this.savedAccount);
+	}
+	
+	// 		DELETE ACCOUNT TEST
+	
+	@Test
 	public void testDeleteNonOverdrawnExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
 		this.service.deleteAccount(new Long(1));
 	}
 	
 	@Test(expected = OverdrawnAccountException.class)
 	public void testDeleteOverdrawnExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
-		this.newAccount.setBalance(-10.0);
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
+		this.account.setBalance(-10.0);
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
 		this.service.deleteAccount(new Long(1));
 	}
 	
@@ -67,34 +100,27 @@ public class AccountServiceTest implements DataInitialization  {
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
 		this.service.deleteAccount(new Long(1));
 	}
-		
-	@Test
-	public void saveTransactionWithCorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
-		this.newAccount.setId(new Long(1));
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
-		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
-		Assert.assertTrue(service.save(this.transaction).getBalance() >= 0);
-	}
 	
-	@Test(expected = InsuficientFundsException.class)
-	public void saveTransactionWithIncorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
-		this.newAccount.setId(new Long(1));
-		this.transaction.setAmount(2000.0);
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
-		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
-		this.service.save(this.transaction);
-	}
+	// 		GET ACCOUNT BALANCE TESTS
 	
 	@Test(expected = AccountNotFoundException.class)
-	public void saveTransactionWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException {
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
-		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
-		this.service.save(this.transaction);
+	public void testGetBalanceOfNonExistingAccount() throws AccountNotFoundException {
+		when(accountRepositoryMock.findById(new Long(1))).thenThrow(NoSuchElementException.class);
+		this.service.getBalance(new Long(1));
 	}
+	
+	@Test
+	public void testgetBalanceOfExistingAccount() throws AccountNotFoundException {
+		when(accountRepositoryMock.findById(new Long(1))).thenReturn(Optional.of(this.account));
+		Assert.assertNotNull(this.service.getBalance(new Long(1)));
+	}
+	
+	
+	//		 GET ACCOUNT BY ID AND PIN TESTS
 	
 	@Test
 	public void testFindByIdAndPinExistent() throws AccountNotFoundException {
-		when(accountRepositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(this.newAccount);
+		when(accountRepositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(this.account);
 		Assert.assertNotNull(this.service.getAccountbyIdNPin(new Long(1), 1234));
 	}
 	
@@ -104,29 +130,48 @@ public class AccountServiceTest implements DataInitialization  {
 		this.service.getAccountbyIdNPin(new Long(1), 1234);
 	}
 
-	@Test(expected = DataIntegrityViolationException.class)
-	public void testSaveWithoutFirstName() {
-		when(accountRepositoryMock.save(this.newAccount)).thenThrow(DataIntegrityViolationException.class);
-		this.savedAccount = service.save(this.newAccount);
-	}
+	// 		 MAKE DEPOSIT TESTS
 	
-	@Test(expected = DataIntegrityViolationException.class)
-	public void testSaveWithoutLastName() {
-		when(accountRepositoryMock.save(this.newAccount)).thenThrow(DataIntegrityViolationException.class);
-		this.savedAccount = service.save(this.newAccount);
-	}
-	
-	@Test(expected = DataIntegrityViolationException.class)
-	public void testSaveWithoutPin() {
-		when(accountRepositoryMock.save(this.newAccount)).thenThrow(DataIntegrityViolationException.class);
-		this.savedAccount = service.save(this.newAccount);
+	@Test(expected = AccountNotFoundException.class)
+	public void testMakeDepositInNonExistentAccount() throws AccountNotFoundException {
+		transaction.getAccount().setId(new Long(1));
+		
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
+		service.makeDeposit(this.transaction);
 	}
 	
 	@Test
-	public void testSaveWithAllProperties() {
-		when(accountRepositoryMock.save(this.newAccount)).thenReturn(this.newAccount);
-		this.savedAccount = service.save(this.newAccount);
-		Assert.assertNotNull(this.savedAccount);
+	public void testMakeDepositInExistingAccount() throws AccountNotFoundException {
+		transaction.getAccount().setId(new Long(1));
+		
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
+		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
+		Assert.assertNotNull(service.makeDeposit(transaction));
+	}
+		
+	//		 MAKE WITHDRAWAL TESTS
+	
+	@Test
+	public void testMakeWithdrawalWithCorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
+		this.account.setId(new Long(1));
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
+		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
+		Assert.assertNotNull(service.makeWithdrawal(this.transaction));
 	}
 	
+	@Test(expected = InsuficientFundsException.class)
+	public void testMakeWithdrawalWithIncorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
+		this.account.setId(new Long(1));
+		this.transaction.setAmount(2000.0);
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
+		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
+		this.service.makeWithdrawal(this.transaction);
+	}
+	
+	@Test(expected = AccountNotFoundException.class)
+	public void saveTransactionWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException {
+		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
+		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
+		this.service.makeWithdrawal(this.transaction);
+	}
 }
