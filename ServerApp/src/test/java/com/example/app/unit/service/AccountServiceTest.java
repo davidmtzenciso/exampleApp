@@ -50,7 +50,7 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test
-	public void testDeleteNonOverdrawalExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
+	public void testDeleteNonOverdrawnExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.newAccount);
 		this.service.deleteAccount(new Long(1));
 	}
@@ -124,7 +124,7 @@ public class AccountServiceTest implements DataInitialization  {
 	
 	@Test
 	public void testSaveWithAllProperties() {
-		when(accountRepositoryMock.save(this.newAccount)).thenReturn(new Account());
+		when(accountRepositoryMock.save(this.newAccount)).thenReturn(this.newAccount);
 		this.savedAccount = service.save(this.newAccount);
 		Assert.assertNotNull(this.savedAccount);
 	}
