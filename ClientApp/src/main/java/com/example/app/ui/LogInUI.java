@@ -5,15 +5,11 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.example.app.controller.LogInUIController;
-import com.example.app.exceptions.LoginFailedException;
 import com.example.app.model.Credentials;
+import com.example.app.uicontrollerimpl.LogInUIController;
 
 
 public class LogInUI {
-
-	@Autowired
-	private HomeUI homeUI;
 	
 	@Autowired
 	private BufferedReader reader;
@@ -21,10 +17,9 @@ public class LogInUI {
 	@Autowired
 	private LogInUIController controller;
 	 
-	private final String ERROR_OPTION = "invalid option! please try again";
-	private final String PROMPT_LOG_IN = "\n1-.Log In\n2-.Exit\n opcion: ";
-	private final String PROMPT_ACCOUNT_NUM = "Account Number: ";
-	private final String PROMPT_PIN = "PIN: ";
+	private final String LOGIN_SECTION = "Authenticating user";
+	private final String PROMPT_ACCOUNT_NUM = "\nAccount Number: ";
+	private final String PROMPT_PIN = "\nPIN: ";
 	
 	public void authenticateUser()  {
 		Long accountNum;
@@ -33,28 +28,18 @@ public class LogInUI {
 		
 		do {
 			try {
-				System.out.println(PROMPT_LOG_IN);
-				option = Integer.parseInt(reader.readLine());
-				if(option == 1) {
-					System.out.println(PROMPT_ACCOUNT_NUM);
-					accountNum = Long.parseLong(reader.readLine());
-					System.out.println(PROMPT_PIN);
-					pin = Integer.parseInt(reader.readLine());
-					System.out.println(controller.authenticate(new Credentials(accountNum, pin)));
-					homeUI.start();
-				} else if(option == 2) {
-					System.exit(0);
-				} else {
-					System.out.println(ERROR_OPTION);
-				}
+				System.out.println(LOGIN_SECTION);
+				System.out.println(PROMPT_ACCOUNT_NUM);
+				accountNum = Long.parseLong(reader.readLine());
+				System.out.println(PROMPT_PIN);
+				pin = Integer.parseInt(reader.readLine());
+				
+				
 			} catch(IOException e) {
 				System.err.println("Input Error, please try again");
 			} catch(NumberFormatException e) {
 				System.err.println("invalid entry, it's not a number\n");
-			} catch(LoginFailedException e) {
-				System.err.println(e.getMessage());
 			}
-			
 		} while(option != 2);
 	}
 }

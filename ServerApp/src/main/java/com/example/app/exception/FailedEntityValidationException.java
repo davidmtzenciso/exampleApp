@@ -4,11 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
-public class InsuficientFundsException extends Exception {
+public class FailedEntityValidationException extends Exception {
 
 	private static final long serialVersionUID = 1L;
-
-	public InsuficientFundsException(String msg) {
-		super(msg);
+	
+	public FailedEntityValidationException(String msg) {
+		super(msg); 
 	}
+
 }

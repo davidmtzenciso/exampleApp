@@ -2,8 +2,10 @@ package com.example.app.conf;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 
 import com.example.app.model.Account;
+import com.example.app.model.Credentials;
 import com.example.app.model.Transaction;
 
 public interface DataInitialization {
@@ -15,7 +17,7 @@ public interface DataInitialization {
 		account.setLastName("Martinez Enciso");
 		account.setBalance(1000.0);
 		account.setAccountHoldersId("12345678");
-		account.setTransactions(null);
+		account.setTransactions(new LinkedHashSet<>());
 		return account;
 	}
 	
@@ -27,5 +29,11 @@ public interface DataInitialization {
 		transaction.setType(4);
 		transaction.setId(null);
 		return transaction;
+	}
+	
+	default Credentials initialize(Credentials credentials) {
+		credentials.setAccountNumber(new Long(1));
+		credentials.setPin(1234);
+		return credentials;
 	}
 }

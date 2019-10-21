@@ -7,9 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
-import com.example.app.controller.LogInUIController;
 import com.example.app.ui.HomeUI;
 import com.example.app.ui.LogInUI;
+import com.example.app.uicontrollerimpl.LogInUIController;
+import com.example.app.util.URLBuilder;
 
 @Configuration
 public class AppConfig {
@@ -27,6 +28,11 @@ public class AppConfig {
 	@Bean
 	public LogInUIController logInUIController() {
 		return new LogInUIController();
+	}
+	
+	@Bean
+	public URLBuilder urlBuilder() {
+		return new URLBuilder();
 	}
 	
 	@Bean

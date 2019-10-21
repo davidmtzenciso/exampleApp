@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Component
@@ -25,6 +25,7 @@ public class Transaction implements Serializable {
 	@Column(name="id", nullable=false)
 	private Long id;
 	
+	@JsonFormat(pattern="yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	@Column(nullable=false, length=10)
 	private Date date;
@@ -38,8 +39,8 @@ public class Transaction implements Serializable {
 	@Column(nullable=false, length=50)
 	private String description;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="account_id")
-	@JsonBackReference
 	private Account account;
 	
 	@JsonIgnore

@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.UNPROCESSABLE_ENTITY)
-public class InsuficientFundsException extends Exception {
+public class AccountNotFoundException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
-	public InsuficientFundsException(String msg) {
+	public AccountNotFoundException(String msg) {
 		super(msg);
 	}
 }
