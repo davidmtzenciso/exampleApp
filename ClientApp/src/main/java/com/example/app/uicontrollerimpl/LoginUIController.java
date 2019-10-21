@@ -14,7 +14,7 @@ import com.example.app.util.URLBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class LogInUIController implements UIController, HttpCommunication {
+public class LoginUIController implements UIController, HttpCommunication {
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -51,7 +51,7 @@ public class LogInUIController implements UIController, HttpCommunication {
 		if(this.isMalformed(data, onSuccess, onError)) {
 			throw new MalformedRequestException("set data and callbacks to handle request");
 		} else {
-			this.post(builder.postAuth(), 
+			this.post(builder.authentication(), 
 					mapper.writeValueAsString(data), 
 					response -> {
 						int status = response.getStatusLine().getStatusCode();

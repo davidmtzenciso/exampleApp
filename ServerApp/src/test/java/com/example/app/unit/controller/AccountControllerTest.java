@@ -67,7 +67,7 @@ public class AccountControllerTest implements DataInitialization {
 	private final String URI_MAKE_DEPOSIT = "/deposit";
 	private final String URI_BALANCE = "/balance";
 	private final String URI_MAKE_WITHDRAWAL = "/withdrawal";
-	private final String URI_DEBITS_CHECKS = "/debits-checks";
+	private final String URI_DEBITS_CHECKS = "/external/debits-checks";
 	private final String WRONG_BODY = "{'name':'jorge', middleName:'daniel'}";
 	 
 	 @PostConstruct

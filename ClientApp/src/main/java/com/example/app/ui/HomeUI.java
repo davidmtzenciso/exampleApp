@@ -76,7 +76,7 @@ public class HomeUI {
 			account = readFirstNLastName(account, reader, 0);
 			account.setPin(readAccountPIN(reader, 0));
 			System.out.println(PROMPT_ACCOUT_HOLDERS_ID);
-			account.setAccountHoldersName(reader.readLine());
+			account.setAccountHoldersId(reader.readLine());
 			System.out.println(PROMPT_BALANCE);
 			balance = reader.readLine();
 			account.setBalance(balance.isEmpty() ? 0.0 : Double.parseDouble(balance));

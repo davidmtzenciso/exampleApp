@@ -15,6 +15,10 @@ import org.apache.http.impl.nio.client.HttpAsyncClients;
 
 public interface HttpCommunication {
 	
+	public static final String HEADER = "Content-Type";
+	public static final String VALUE = "application/json; charset=utf-8";
+	
+
 	default CloseableHttpAsyncClient post(String url, String data, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) throws UnsupportedEncodingException  {
 		CloseableHttpAsyncClient httpclient;
 		HttpPost post;
@@ -22,7 +26,7 @@ public interface HttpCommunication {
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
         post = new HttpPost(url);
-        post.addHeader("Content-Type", "application/json; charset=utf-8");
+        post.addHeader(HEADER, VALUE);
         post.setEntity(new StringEntity(data));
         httpclient.execute(post, getCallback(onResponse, onError));
         return httpclient; 
@@ -35,7 +39,7 @@ public interface HttpCommunication {
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
         put = new HttpPut(url);
-        put.addHeader("Content-Type", "application/json; charset=utf-8");
+        put.addHeader(HEADER, VALUE);
         put.setEntity(new StringEntity(data));
         httpclient.execute(put, getCallback(onResponse, onError));
         return httpclient;
@@ -48,7 +52,7 @@ public interface HttpCommunication {
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
         delete = new HttpDelete(url);
-        delete.addHeader("Content-Type", "application/json; charset=utf-8");
+        delete.addHeader(HEADER, VALUE);
         httpclient.execute(delete, getCallback(onResponse, onError));
         return httpclient;
 	}
@@ -60,7 +64,7 @@ public interface HttpCommunication {
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
         get = new HttpGet(url);
-        get.addHeader("Content-Type", "application/json; charset=utf-8");
+        get.addHeader(HEADER, VALUE);
         httpclient.execute(get, getCallback(onResponse, onError));
         return httpclient;
 	}

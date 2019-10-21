@@ -6,16 +6,16 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.app.model.Credentials;
-import com.example.app.uicontrollerimpl.LogInUIController;
+import com.example.app.uicontrollerimpl.LoginUIController;
 
 
-public class LogInUI {
+public class LoginUI {
 	
 	@Autowired
 	private BufferedReader reader;
 	
 	@Autowired
-	private LogInUIController controller;
+	private LoginUIController controller;
 	 
 	private final String LOGIN_SECTION = "Authenticating user";
 	private final String PROMPT_ACCOUNT_NUM = "\nAccount Number: ";

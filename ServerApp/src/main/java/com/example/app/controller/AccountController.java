@@ -74,7 +74,7 @@ public class AccountController {
 		return this.accountService.makeWithdrawal(operation);
 	}
 	
-	@RequestMapping(value = "/debits-checks", method = RequestMethod.POST,
+	@RequestMapping(value = "/external/debits-checks", method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, 
 			produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody Long processDebitsNChecks(@RequestBody Transaction operation) throws FailedEntityValidationException {

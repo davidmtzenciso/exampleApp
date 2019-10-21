@@ -10,6 +10,7 @@ public class Transaction implements Serializable {
 	private Integer type;
 	private Double amount;
 	private String description;
+	private Account account;
 	private static final long serialVersionUID = 1L;
 	
 	public Long getId() {
@@ -50,5 +51,13 @@ public class Transaction implements Serializable {
 	
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 }

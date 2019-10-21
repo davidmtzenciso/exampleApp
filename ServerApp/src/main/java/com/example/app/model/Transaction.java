@@ -27,10 +27,10 @@ public class Transaction implements Serializable {
 	
 	@JsonFormat(pattern="yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
-	@Column(nullable=false, length=10)
+	@Column(name="date_", nullable=false, length=10)
 	private Date date;
 	
-	@Column(nullable=false)
+	@Column(name="type_", nullable=false)
 	private Integer type;
 	
 	@Column(nullable=false)

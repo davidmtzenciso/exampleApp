@@ -7,17 +7,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import com.example.app.model.Account;
+import com.example.app.model.Credentials;
+import com.example.app.model.Transaction;
 import com.example.app.ui.HomeUI;
-import com.example.app.ui.LogInUI;
-import com.example.app.uicontrollerimpl.LogInUIController;
+import com.example.app.ui.LoginUI;
+import com.example.app.uicontrollerimpl.LoginUIController;
 import com.example.app.util.URLBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 public class AppConfig {
 	
 	@Bean
-	public LogInUI logInUI() {
-		return new LogInUI();
+	public LoginUI logInUI() {
+		return new LoginUI();
 	}
 	
 	@Bean
@@ -26,8 +30,8 @@ public class AppConfig {
 	}
 	
 	@Bean
-	public LogInUIController logInUIController() {
-		return new LogInUIController();
+	public LoginUIController logInUIController() {
+		return new LoginUIController();
 	}
 	
 	@Bean
@@ -40,4 +44,28 @@ public class AppConfig {
 	public BufferedReader bufferedReader() {
 		return new BufferedReader(new InputStreamReader(System.in));
 	}
+	
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
+	}
+	
+	@Bean
+	@Scope("prototype")
+	public Credentials credentials() {
+		return new Credentials();
+	}
+	
+	@Bean
+	@Scope("prototype")
+	public Account account() {
+		return new Account();
+	}
+	
+	@Bean
+	@Scope("prototype")
+	public Transaction transaction() {
+		return new Transaction();
+	}
+	
 }

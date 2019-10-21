@@ -1,5 +1,6 @@
 com\example\app\unit\repository\AccountRepositoryTest.class
 com\example\app\conf\DataInitialization.class
+com\example\app\unit\controller\AccountControllerTest.class
 com\example\app\conf\CucumberTest.class
 com\example\app\conf\DataTableConfigurer$1.class
 com\example\app\integration\service\AccountServiceTest.class

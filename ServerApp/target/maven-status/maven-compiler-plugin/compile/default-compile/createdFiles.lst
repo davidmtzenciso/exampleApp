@@ -1,7 +1,9 @@
+com\example\app\exception\FailedEntityValidationException.class
 com\example\app\controller\AccountController.class
 com\example\app\model\Transaction.class
 com\example\app\repository\AccountRepository.class
 com\example\app\model\Account.class
+com\example\app\exception\AccountNotFoundException.class
 com\example\app\model\Credentials.class
 com\example\app\serviceImpl\AccountServiceImpl.class
 com\example\app\exception\OverdrawnAccountException.class

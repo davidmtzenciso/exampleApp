@@ -5,20 +5,20 @@ import java.util.List;
 
 public class Account implements Serializable {
 
-	private Long accountNumber;
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private Integer pin;
-	private String accountHoldersName;
+	private String accountHoldersId;
 	private Double balance;
 	private List<Transaction> transactions;
 	private static final long serialVersionUID = -2209620568224742038L;
 	
-	public Long getAccountNumber() {
-		return accountNumber;
+	public Long getId() {
+		return id;
 	}
-	public void setAccountNumber(Long accountNumber) {
-		this.accountNumber = accountNumber;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -38,11 +38,11 @@ public class Account implements Serializable {
 	public void setPin(Integer pin) {
 		this.pin = pin;
 	}
-	public String getAccountHoldersName() {
-		return accountHoldersName;
+	public String getAccountHoldersId() {
+		return accountHoldersId;
 	}
-	public void setAccountHoldersName(String accountHoldersName) {
-		this.accountHoldersName = accountHoldersName;
+	public void setAccountHoldersId(String id) {
+		this.accountHoldersId = id;
 	}
 	public Double getBalance() {
 		return balance;
