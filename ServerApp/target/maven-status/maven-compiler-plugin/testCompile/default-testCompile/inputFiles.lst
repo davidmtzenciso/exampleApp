@@ -1,5 +1,6 @@
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\integration\service\AccountServiceTest.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\CucumberTest.java
+C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\integration\controller\DeleteAccountSteps.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\integration\controller\CreateAccountSteps.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\unit\controller\AccountControllerTest.java
 C:\Users\david.martinez\git\exampleApp\ServerApp\src\test\java\com\example\app\conf\DataInitialization.java

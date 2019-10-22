@@ -1,5 +1,6 @@
 package com.example.app.serviceImpl;
 
+
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,10 @@ public class AccountServiceImpl implements AccountService {
 	private final String OVERDRAWN = "Account's balance negative, unable to close";
 	private final String INSUFICIENT_FUNDS = "Operation unsuccessful, insuficient funds";
 	private final String LOGIN_FAILED = "Invalid account number or pin, please try again";
-	private final String FAILED_VALIDATION = "Unabñle to open account, Invalid data or missing required fields";
+	private final String FAILED_VALIDATION = "Unable to open account, Invalid data or missing required fields";
+	private final String EMPTY_LAST_NAME = "first name cannot be empty";
+	private final String EMPTY_FIRST_NAME = "last name cannot be empty";
+	private final String PIN_CERO = "account's pin number cannot be empty or be cero";
 
 	@Autowired
 	private AccountRepository accountRepository;
@@ -34,7 +38,22 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Account save(Account entity) throws FailedEntityValidationException {
 		entity.setId(null);
+		
 		try {
+			if(entity.getPin() == null) {
+				throw new FailedEntityValidationException(PIN_CERO);
+			} else if(entity.getPin() <= 0) {
+				 throw new FailedEntityValidationException(PIN_CERO);
+			 } else if(entity.getFirstName() == null) {
+				 throw new FailedEntityValidationException(EMPTY_FIRST_NAME);
+			 } else if(entity.getFirstName().isEmpty()) {
+				 throw new FailedEntityValidationException(EMPTY_FIRST_NAME);
+			 } else if(entity.getLastName() == null) {
+				 throw new FailedEntityValidationException(EMPTY_LAST_NAME);
+			 } else if(entity.getLastName().isEmpty()) {
+				 throw new FailedEntityValidationException(EMPTY_LAST_NAME);
+			 }
+			
 			return this.accountRepository.save(entity);
 		} catch(DataIntegrityViolationException e) {
 			throw new FailedEntityValidationException(FAILED_VALIDATION);
@@ -46,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
 			Account lockedAccount = accountRepository.findAndLockById(id);
 			
 			if(lockedAccount != null) {
-				if(lockedAccount.getBalance() >= 0) {
+				if(lockedAccount.getBalance() >= 0.0) {
 					accountRepository.delete(lockedAccount);
 					return "Account closed!";
 				}

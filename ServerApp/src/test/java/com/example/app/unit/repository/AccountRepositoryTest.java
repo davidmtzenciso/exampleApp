@@ -62,7 +62,7 @@ public class AccountRepositoryTest implements DataInitialization {
 	
 	@Test
 	public void testFindAndLockByIdNonExistent() {
-		Account lockedAccount = this.repository.findAndLockById(new Long(1));
+		Account lockedAccount = this.repository.findAndLockById(new Long(0));
 		Assert.assertNull(lockedAccount);
 	}
 	
