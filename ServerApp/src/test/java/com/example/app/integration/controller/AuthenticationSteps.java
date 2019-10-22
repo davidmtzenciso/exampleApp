@@ -48,15 +48,15 @@ public AuthenticationSteps() {
 			this.createAccount(this.newAccount);
 		});
 		
-		Given("user provides the values", (Long id, Integer pin) -> {
+		Given("user provides the values {long} {int}", (Long id, Integer pin) -> {
 			credentials.setAccountNumber(id);
 			credentials.setPin(pin);
 		});
 		
-		When("user wants to be authenticated {string}", (String testContext) -> {
+		When("user {string}", (String testContext) -> {
 			 this.response = mvc.perform(post(HOST + API_VERSION + URI_MODULE + URI_AUTH)
 				      .contentType(MediaType.APPLICATION_JSON)
-				      .content((mapper.writeValueAsString(this.newAccount))));
+				      .content((mapper.writeValueAsString(this.credentials))));
 		});
 		
 		Then("authentication {string}", (String expectedResult) -> {	

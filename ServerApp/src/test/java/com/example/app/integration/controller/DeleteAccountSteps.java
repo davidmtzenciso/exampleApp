@@ -1,6 +1,8 @@
 package com.example.app.integration.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -31,28 +33,27 @@ public class DeleteAccountSteps implements En, DataInitialization  {
 	private Account newAccount;
 	
 	private ResultActions response;
-	private Integer id;
+	private int id;
 	
 	private final String HOST = "http://localhost:8080";
 	private final String URI_MODULE = "/account";
 	private final String API_VERSION = "/1.0.0";
-	private final String FAILS = "FAILS";
 	private final String SUCCEEDS = "SUCCEEDS";
 	
 	public DeleteAccountSteps() { 
 		
 		Given("there is an account with id {int}", (Integer id) -> {
 			this.newAccount = this.initialize(this.newAccount);
-			this.newAccount.setId(new Long(1));
+			this.newAccount.setId(new Long(id));
 			this.createAccount(this.newAccount);
 		});
 
-		Given("user wants to delete his account by providing {int}", (Integer accountNumber) -> {
-			this.id = accountNumber;
+		Given("user provides the value {int}", (Integer id) -> {
+			this.id = id;
 		});
 		
 		When("user wants to delete the account {string}", (String testContext) -> {
-			 this.response = mvc.perform(post(HOST + API_VERSION + URI_MODULE + "?id=" + this.id)
+			 this.response = mvc.perform(delete(HOST + API_VERSION + URI_MODULE + "?id=" + this.id)
 				      .contentType(MediaType.APPLICATION_JSON)
 				      .accept(MediaType.APPLICATION_JSON_UTF8));	 
 		});
