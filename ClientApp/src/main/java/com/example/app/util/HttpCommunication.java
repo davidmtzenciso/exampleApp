@@ -13,13 +13,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 
-public interface HttpCommunication {
+public abstract class HttpCommunication {
 	
 	public static final String HEADER = "Content-Type";
 	public static final String VALUE = "application/json; charset=utf-8";
 	
 
-	default CloseableHttpAsyncClient post(String url, String data, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) throws UnsupportedEncodingException  {
+	protected CloseableHttpAsyncClient post(String url, String data, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) throws UnsupportedEncodingException  {
 		CloseableHttpAsyncClient httpclient;
 		HttpPost post;
         
@@ -32,7 +32,7 @@ public interface HttpCommunication {
         return httpclient; 
 	}
 	
-	default CloseableHttpAsyncClient put(String url, String data, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) throws UnsupportedEncodingException  {
+	protected CloseableHttpAsyncClient put(String url, String data, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) throws UnsupportedEncodingException  {
 		CloseableHttpAsyncClient httpclient;
 		HttpPut put;
         
@@ -45,7 +45,7 @@ public interface HttpCommunication {
         return httpclient;
 	}
 	
-	default CloseableHttpAsyncClient delete(String url, Consumer<HttpResponse> onResponse, Consumer<Exception> onError)  {
+	protected CloseableHttpAsyncClient delete(String url, Consumer<HttpResponse> onResponse, Consumer<Exception> onError)  {
 		CloseableHttpAsyncClient httpclient;
 		HttpDelete delete;
         
@@ -57,7 +57,7 @@ public interface HttpCommunication {
         return httpclient;
 	}
 	
-	default CloseableHttpAsyncClient get(String url, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) {
+	protected CloseableHttpAsyncClient get(String url, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) {
 		CloseableHttpAsyncClient httpclient;
 		HttpGet get;
         
@@ -69,7 +69,7 @@ public interface HttpCommunication {
         return httpclient;
 	}
 	
-	default FutureCallback<HttpResponse> getCallback(Consumer<HttpResponse> onResponse, Consumer<Exception> onError) {
+	protected FutureCallback<HttpResponse> getCallback(Consumer<HttpResponse> onResponse, Consumer<Exception> onError) {
 		return new FutureCallback<HttpResponse>() {
 
 			@Override

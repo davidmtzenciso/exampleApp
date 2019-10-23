@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.function.Consumer;
 
-import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
-
 import com.example.app.exceptions.AuthenticationFailedException;
 import com.example.app.exceptions.MalformedRequestException;
 import com.example.app.model.Account;

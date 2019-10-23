@@ -21,7 +21,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.util.Assert;
 
 import com.example.app.conf.AppConfig;
 import com.example.app.conf.DataInitialization;
@@ -35,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = AppConfig.class)
-public class HttpCommunicationTest implements HttpCommunication, DataInitialization  {
+public class HttpCommunicationTest extends HttpCommunication implements DataInitialization  {
 	
 	@Autowired
 	private URLBuilder builder;
@@ -52,7 +51,6 @@ public class HttpCommunicationTest implements HttpCommunication, DataInitializat
 	@Autowired
 	private Transaction transaction;
 	
-	private Transaction transactionSaved;
 	private Account accountSaved;
 	private int status;
 	private String responseMsg;
