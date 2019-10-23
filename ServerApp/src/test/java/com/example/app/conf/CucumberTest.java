@@ -6,7 +6,7 @@ import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(plugin = {"pretty"}, 
+@CucumberOptions(plugin = {"pretty" },
 				 glue = {"com/example/app/integration/controller", "com/example/app/conf"},
 				 features = "src/test/resources/features",
 				 monochrome = true)

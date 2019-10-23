@@ -32,7 +32,7 @@ public interface DataInitialization {
 	}
 	
 	default Credentials initialize(Credentials credentials) {
-		credentials.setAccountNum(new Long(1));
+		credentials.setAccountNumber(new Long(1));
 		credentials.setPin(1234);
 		return credentials;
 	}

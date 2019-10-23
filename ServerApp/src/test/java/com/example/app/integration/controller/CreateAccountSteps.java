@@ -1,12 +1,10 @@
 package com.example.app.integration.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.util.List;
 
-import org.junit.AfterClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,7 +14,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import com.example.app.model.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.cucumber.core.api.Scenario;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java8.En;
 
@@ -55,14 +52,7 @@ public class CreateAccountSteps implements En {
 			 response.andExpect(this.getExpectedStatus(expectedResult));			 
 		});
 	}
-	
-	@AfterClass
-	public void clean(Scenario scenario) throws Exception {
-		this.response = mvc.perform(delete(HOST + API_VERSION + URI_MODULE + "?id=" + this.newAccount.getId())
-			      .contentType(MediaType.APPLICATION_JSON_UTF8)
-			      .accept(MediaType.APPLICATION_JSON_UTF8));	
-	}
-	
+
 	private ResultMatcher getExpectedStatus(String expectedResult) {
 		return expectedResult.equals(SUCCEEDS) ? status().isOk() : status().isUnprocessableEntity();
 	}

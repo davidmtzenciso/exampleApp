@@ -3,14 +3,28 @@ package com.example.app.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 public class Transaction implements Serializable {
 
 	private Long id;
+	
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date date;
+	
 	private Integer type;
 	private Double amount;
 	private String description;
+	
+	@JsonIdentityInfo(
+			  generator = ObjectIdGenerators.PropertyGenerator.class, 
+			  property = "id")
 	private Account account;
+	
+	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 	
 	public Long getId() {

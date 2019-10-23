@@ -12,4 +12,4 @@ Feature: Delete an Account
 			| testCase                  	 | expectedResult | id       | 
 			| WITH NON EXISTING ID				 | FAILS				  | 2234234  |
 			| WITH EMPTY ID								 | FAILS					| 0        |
-			| WITH EXISTING ID						 | SUCCEEDS      	| 1 			 | 
+			| WITH EXISTING ID						 | SUCCEEDS      	| 2 			 | 

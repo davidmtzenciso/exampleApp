@@ -1,11 +1,9 @@
 package com.example.app.integration.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.BeforeClass;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.MediaType;
@@ -14,8 +12,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import com.example.app.conf.DataInitialization;
-import com.example.app.model.Account;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.cucumber.java8.En;
 
@@ -24,12 +20,6 @@ public class DeleteAccountSteps implements En, DataInitialization  {
 	
 	@Autowired
     private MockMvc mvc;
-	
-	@Autowired
-	private ObjectMapper mapper;
-	
-	@Autowired
-	private Account newAccount;
 	
 	private ResultActions response;
 	private int id;
@@ -55,16 +45,7 @@ public class DeleteAccountSteps implements En, DataInitialization  {
 			 response.andExpect(this.getExpectedStatus(expectedResult));
 		});
 	}
-	
-	@BeforeClass
-	public void init() throws Exception {
-		this.newAccount = this.initialize(this.newAccount);
-		this.response = mvc.perform(post(HOST + API_VERSION + URI_MODULE)
-			      .contentType(MediaType.APPLICATION_JSON_UTF8)
-			      .content(mapper.writeValueAsString(newAccount))
-			      .accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
-	}
-	
+
 	private ResultMatcher getExpectedStatus(String expectedResult) {
 		return expectedResult.equals(SUCCEEDS) ? status().isOk() : status().isUnprocessableEntity();
 	}

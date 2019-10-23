@@ -3,6 +3,8 @@ package com.example.app.model;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class Account implements Serializable {
 
 	private Long id;

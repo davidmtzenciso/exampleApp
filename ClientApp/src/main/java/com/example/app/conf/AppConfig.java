@@ -2,6 +2,7 @@ package com.example.app.conf;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,7 +60,9 @@ public class AppConfig {
 	@Bean
 	@Scope("prototype")
 	public Account account() {
-		return new Account();
+		Account account = new Account();
+		account.setTransactions(new ArrayList<>());
+		return account;
 	}
 	
 	@Bean

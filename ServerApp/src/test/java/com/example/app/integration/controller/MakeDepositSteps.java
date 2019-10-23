@@ -1,13 +1,10 @@
 package com.example.app.integration.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,11 +12,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import com.example.app.conf.DataInitialization;
-import com.example.app.model.Account;
 import com.example.app.model.Transaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.cucumber.core.api.Scenario;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java8.En;
 
@@ -30,9 +25,6 @@ public class MakeDepositSteps implements En, DataInitialization {
 	
 	@Autowired
 	private ObjectMapper mapper;
-	
-	@Autowired
-	private Account newAccount;
 	
 	private ResultActions response;
 	
@@ -61,23 +53,6 @@ public class MakeDepositSteps implements En, DataInitialization {
 		Then("the deposit {string}", (String expectedResult) -> {
 			 response.andExpect(this.getExpectedStatus(expectedResult));
 		});
-	}
-	
-	@BeforeClass
-	public void init() throws Exception {
-		this.newAccount = this.initialize(this.newAccount);
-		this.response = mvc.perform(post(HOST + API_VERSION + URI_MODULE)
-			      .contentType(MediaType.APPLICATION_JSON_UTF8)
-			      .content(mapper.writeValueAsString(newAccount))
-			      .accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
-	}
-	
-	
-	@AfterClass
-	public void clean(Scenario scenario) throws Exception {
-		this.response = mvc.perform(delete(HOST + API_VERSION + URI_MODULE + "?id=" + this.newAccount.getId())
-			      .contentType(MediaType.APPLICATION_JSON_UTF8)
-			      .accept(MediaType.APPLICATION_JSON_UTF8));	
 	}
 	
 	private ResultMatcher getExpectedStatus(String expectedResult) {

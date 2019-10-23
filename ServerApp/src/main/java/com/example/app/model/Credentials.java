@@ -34,5 +34,4 @@ public class Credentials implements Serializable  {
 		this.pin = pin;
 	}
 	
-	
 }

@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 
 import com.example.app.model.Transaction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Component
@@ -47,6 +49,7 @@ public class Account implements Serializable {
 	@Column(nullable=false)
 	private Double balance;
 	
+	@JsonInclude(Include.ALWAYS)
 	@OneToMany(mappedBy="account", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE)
 	private Set<Transaction> transactions;
 	

@@ -142,9 +142,12 @@ public class HttpCommunicationTest implements HttpCommunication, DataInitializat
 		}
 	}
 	
-	@Test
+	//@Test
 	@Tag(SKIP_BEFORE)
+	@DisplayName("test correct create account")
 	public void testCreateAccount(TestInfo info) throws IOException, InterruptedException {
+		LOG.info(info.getDisplayName());
+		
 		CloseableHttpAsyncClient client = this.post(builder.createAccount(), 
 					mapper.writeValueAsString(account), 
 					response -> {
@@ -175,9 +178,11 @@ public class HttpCommunicationTest implements HttpCommunication, DataInitializat
 		Assertions.assertEquals(200, status, responseMsg);
 	}
 	
-	@Test
+	//@Test
 	@Tag(SKIP_AFTER)
+	@DisplayName("test correct delete account")
 	public void testDeleteAccount(TestInfo info) throws IOException, InterruptedException {		
+		LOG.info(info.getDisplayName());
 		CloseableHttpAsyncClient client = 
 				this.delete(builder.deleteAccount(this.accountSaved.getId()) , 
 					response -> {
@@ -205,10 +210,8 @@ public class HttpCommunicationTest implements HttpCommunication, DataInitializat
 	@DisplayName("test correct authentication")
 	public void testAuthetication(TestInfo info) throws IOException, InterruptedException {
 		LOG.info(info.getDisplayName());
-		credentials.setAccountNum(this.accountSaved.getId());
+		credentials.setAccountNumber(this.accountSaved.getId());
 		credentials.setPin(this.accountSaved.getPin());
-		LOG.info(this.accountSaved.getId() + "");
-		LOG.info(this.accountSaved.getPin() + "");
 		
 		CloseableHttpAsyncClient client =  this.post(builder.authentication(), 
 					mapper.writeValueAsString(credentials), 
@@ -247,7 +250,10 @@ public class HttpCommunicationTest implements HttpCommunication, DataInitializat
 	
 
 	@Test
-	public void testGetBalance() throws IOException, InterruptedException {
+	@DisplayName("test correct get balance")
+	public void testGetBalance(TestInfo info) throws IOException, InterruptedException {
+		LOG.info(info.getDisplayName());
+
 		CloseableHttpAsyncClient client = this.get(builder.getBalance(this.accountSaved.getId()), 
 					response -> {
 						try {
@@ -271,71 +277,100 @@ public class HttpCommunicationTest implements HttpCommunication, DataInitializat
 		Assertions.assertEquals(200, status, responseMsg);
 	}
 	
-	//@Test
-	public void testMakeDeposit() throws IOException, InterruptedException {
-		this.account.setId(new Long(1));
+	@Test
+	@DisplayName("test correct make a deposit")
+	public void testMakeDeposit(TestInfo info) throws IOException, InterruptedException {	
+		LOG.info(info.getDisplayName());
+		this.transaction.setAccount(new Account());
+		this.transaction.getAccount().setId(this.accountSaved.getId());
 		
-		this.post(builder.makeDeposit(), 
-					mapper.writeValueAsString(transaction) , 
+		CloseableHttpAsyncClient client = 
+				this.post(builder.makeDeposit(), 
+					mapper.writeValueAsString(transaction), 
 					response -> {
 						try {
-							Logger.getGlobal().info(new StringBuilder().append(response.getEntity().getContent()).toString());
+							responseMsg = this.readMessage(response);
+							status = response.getStatusLine().getStatusCode();
 						} catch (UnsupportedOperationException e) {
+							status = 0;
 							e.printStackTrace();
 						} catch (IOException e) {
 							e.printStackTrace();
+							status = 0;
 						}
-						Assertions.assertTrue(response.getStatusLine().getStatusCode() == 200);
 					}, 
 					error -> {
-						Logger.getGlobal().severe(error.getMessage());
-					}).close();
+						status = 0;
+						responseMsg = error.getMessage();
+					});
 		
 		Thread.sleep(1000);
+		client.close();
+		Assertions.assertEquals(200, status, responseMsg);Thread.sleep(1000);
 	}
 	
-	//@Test
-	public void testMakeWithdrawal() throws IOException, InterruptedException {
-		this.account.setId(new Long(1));
+	@Test
+	@DisplayName("test correct make a withdrawal")
+	public void testMakeWithdrawal(TestInfo info) throws IOException, InterruptedException {
+		LOG.info(info.getDisplayName());
+		this.transaction.setAccount(new Account());
+		this.transaction.getAccount().setId(this.accountSaved.getId());
 		
-		this.post(builder.makeWithdrawal(), 
+		CloseableHttpAsyncClient client = 
+				this.post(builder.makeWithdrawal(), 
 					mapper.writeValueAsString(transaction) , 
 					response -> {
 						try {
-							Logger.getGlobal().info(new StringBuilder().append(response.getEntity().getContent()).toString());
+							responseMsg = this.readMessage(response);
+							status = response.getStatusLine().getStatusCode();
 						} catch (UnsupportedOperationException e) {
 							e.printStackTrace();
+							status = 0;
 						} catch (IOException e) {
+							status = 0;
 							e.printStackTrace();
 						}
-						Assertions.assertTrue(response.getStatusLine().getStatusCode() == 200);
 					}, 
 					error -> {
-						Logger.getGlobal().severe(error.getMessage());
-					}).close();
+						status = 0;
+						responseMsg = error.getMessage();
+					});
 		
 		Thread.sleep(1000);
+		client.close();
+		Assertions.assertEquals(200, status, responseMsg);Thread.sleep(1000);
 	}
 	
-	//@Test
-	public void testExternalDebitsNChecks() throws IOException, InterruptedException {
-		this.post(builder.externalDebitsNChecks(), 
+	@Test
+	@DisplayName("test correct external debits and checks")
+	public void testExternalDebitsNChecks(TestInfo info) throws IOException, InterruptedException {
+		LOG.info(info.getDisplayName());
+		this.transaction.setAccount(new Account());
+		this.transaction.getAccount().setId(this.accountSaved.getId());
+		
+		CloseableHttpAsyncClient client = 
+				this.post(builder.externalDebitsNChecks(), 
 					mapper.writeValueAsString(transaction) , 
 					response -> {
 						try {
-							Logger.getGlobal().info(new StringBuilder().append(response.getEntity().getContent()).toString());
+							responseMsg = this.readMessage(response);
+							status = response.getStatusLine().getStatusCode();
 						} catch (UnsupportedOperationException e) {
 							e.printStackTrace();
+							status = 0;
 						} catch (IOException e) {
 							e.printStackTrace();
+							status = 0;
 						}
-						Assertions.assertTrue(response.getStatusLine().getStatusCode() == 200);
 					}, 
 					error -> {
-						Logger.getGlobal().severe(error.getMessage());
-					}).close();
+						status = 0;
+						responseMsg = error.getMessage();
+					});
 		
 		Thread.sleep(1000);
+		client.close();
+		Assertions.assertEquals(200, status, responseMsg);Thread.sleep(1000);
 	}
 }
 
