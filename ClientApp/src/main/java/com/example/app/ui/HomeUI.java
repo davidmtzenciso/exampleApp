@@ -6,19 +6,25 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.app.exceptions.AttemptsExceededException;
+import com.example.app.exceptions.AuthenticationFailedException;
+import com.example.app.exceptions.MalformedRequestException;
 import com.example.app.model.Account;
 
 public class HomeUI {
 	
 	@Autowired
+	private LoginUI loginUI;
+	
+	@Autowired
+	private OperationsUI operationsUI;
+	
+	@Autowired
 	private BufferedReader reader;
 	
 	private final int OPEN_ACCOUNT = 1;
-	private final int CLOSE_ACCOUNT = 2;
-	private final int MAKE_DEPOSIT = 3;
-	private final int WITHDRAWAL = 4;
+	private final int LOGIN = 2;
 	private final int EXIT = 5;
-	private final String MENU_OPERATIONS = "\n1-.Open Account\n2-.Close Account\n3-.Make Deposit\n4-.Withdrawal\n4-.Account Balance\n5-.Exit";
+	private final String HOME_MENU = "1-.log in\n2-.Open account\n3-.Exit";
 	private final String OPEN_ACCOUNT_SEC = "Open Account\n";
 	private final String PROMPT_FIRST_NAME = "\nFirst name: ";
 	private final String PROMPT_LAST_NAME = "\nLast name:";
@@ -32,37 +38,36 @@ public class HomeUI {
 	private final String ERROR_ATTEMPTS_EXCEEDED = "attempts exceeded(3), operation canceled";
 	private final String PROMPT_ACCOUT_HOLDERS_ID = "\nID: ";
 	private final String PROMPT_BALANCE = "\nInitial balance: ";
+	private final String READ_ERROR = "Input Error, please try again";
+	private final String ENTRY_ERROR = "invalid entry, it's not a number\n";
 	
-	public void start() {
-		Account account;
-		
+	public void start() throws MalformedRequestException {
 		int option = 0;
 		
 		do {
 			try {
-				System.out.println(MENU_OPERATIONS);
+				System.out.println(HOME_MENU);
 				option = Integer.parseInt(reader.readLine());
 				switch(option) {
 					case OPEN_ACCOUNT: 
-						account = createAccount(this.reader);
-						
-					case CLOSE_ACCOUNT:
+						operationsUI.start(createAccount(this.reader));
 						break;
-					case MAKE_DEPOSIT:
-						break;
-					case WITHDRAWAL:
+					case LOGIN:
+						operationsUI.start(loginUI.authenticate());
 						break;
 					case EXIT:
 						break;
 				}
 			} catch(NumberFormatException e) {
-				System.err.println("invalid option, is not a number");
+				System.err.println(READ_ERROR);
 			} 
 			catch(AttemptsExceededException e) {
 				System.err.println(e.getMessage());
 			}
 			catch (IOException e) {
-				System.err.println("input error, please try again");
+				System.err.println(ENTRY_ERROR);
+			} catch(AuthenticationFailedException e) {
+				System.err.println(e.getMessage());
 			}
 		} while(option != 5);
 	}

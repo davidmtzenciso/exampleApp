@@ -13,7 +13,8 @@ import com.example.app.model.Credentials;
 import com.example.app.model.Transaction;
 import com.example.app.ui.HomeUI;
 import com.example.app.ui.LoginUI;
-import com.example.app.uicontrollerimpl.LoginUIController;
+import com.example.app.uicontroller.LoginUIController;
+import com.example.app.uicontrollerimpl.LoginUIControllerImpl;
 import com.example.app.util.URLBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,7 +33,7 @@ public class AppConfig {
 	
 	@Bean
 	public LoginUIController logInUIController() {
-		return new LoginUIController();
+		return new LoginUIControllerImpl();
 	}
 	
 	@Bean
