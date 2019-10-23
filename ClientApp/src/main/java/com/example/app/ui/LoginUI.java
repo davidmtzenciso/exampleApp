@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import com.example.app.exceptions.AuthenticationFailedException;
 import com.example.app.exceptions.MalformedRequestException;
@@ -20,6 +21,8 @@ public class LoginUI {
 	private LoginUIController uiController;
 	
 	@Autowired
+	ApplicationContext context;
+	
 	private Credentials credentials;
 	 
 	private final String LOGIN_SECTION = "Authenticating user";
@@ -32,7 +35,7 @@ public class LoginUI {
 	public Account authenticate()  throws AuthenticationFailedException, MalformedRequestException{
 		Long accountNumber;
 		Integer pin;
-	     attempts = 0;
+	    attempts = 0;
 		
 		do {
 			try {
@@ -41,6 +44,7 @@ public class LoginUI {
 				accountNumber = Long.parseLong(reader.readLine());
 				System.out.println(PROMPT_PIN);
 				pin = Integer.parseInt(reader.readLine());
+				credentials = context.getBean(Credentials.class);
 				credentials.setAccountNumber(accountNumber);
 				credentials.setPin(pin);
 				uiController.setData(credentials)

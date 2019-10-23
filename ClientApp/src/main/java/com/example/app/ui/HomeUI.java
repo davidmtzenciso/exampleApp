@@ -41,7 +41,7 @@ public class HomeUI {
 	private final String READ_ERROR = "Input Error, please try again";
 	private final String ENTRY_ERROR = "invalid entry, it's not a number\n";
 	
-	public void start() throws MalformedRequestException {
+	public void start() {
 		int option = 0;
 		
 		do {
@@ -67,6 +67,8 @@ public class HomeUI {
 			catch (IOException e) {
 				System.err.println(ENTRY_ERROR);
 			} catch(AuthenticationFailedException e) {
+				System.err.println(e.getMessage());
+			} catch(MalformedRequestException e) {
 				System.err.println(e.getMessage());
 			}
 		} while(option != 5);

@@ -27,6 +27,12 @@ public class Transaction implements Serializable {
 	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 	
+	public Transaction() {}
+		
+	public Transaction(Account account) {
+		this.account = account;
+	}
+
 	public Long getId() {
 		return id;
 	}

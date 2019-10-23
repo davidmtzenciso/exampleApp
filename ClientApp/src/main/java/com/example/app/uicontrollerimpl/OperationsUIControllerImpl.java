@@ -14,14 +14,14 @@ import com.example.app.uicontroller.OperationsUIController;
 import com.example.app.util.URLBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class OperationUIControllerImpl extends AbstractUIController implements OperationsUIController  {
+public class OperationsUIControllerImpl extends AbstractUIController implements OperationsUIController  {
 	
 	@Autowired
 	private URLBuilder builder;
 	
 	private List<Transaction> recentTransactions;
 	
-	public OperationUIControllerImpl() {
+	public OperationsUIControllerImpl() {
 		this.recentTransactions = new ArrayList<>();
 	}
 

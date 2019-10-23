@@ -2,19 +2,20 @@ package com.example.app.conf;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
-import com.example.app.model.Account;
-import com.example.app.model.Credentials;
-import com.example.app.model.Transaction;
 import com.example.app.ui.HomeUI;
 import com.example.app.ui.LoginUI;
+import com.example.app.ui.OperationsUI;
 import com.example.app.uicontroller.LoginUIController;
+import com.example.app.uicontroller.OperationsUIController;
 import com.example.app.uicontrollerimpl.LoginUIControllerImpl;
+import com.example.app.uicontrollerimpl.OperationsUIControllerImpl;
 import com.example.app.util.URLBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -32,8 +33,18 @@ public class AppConfig {
 	}
 	
 	@Bean
+	public OperationsUI operationsUI() {
+		return new OperationsUI();
+	}
+	
+	@Bean
 	public LoginUIController logInUIController() {
 		return new LoginUIControllerImpl();
+	}
+	
+	@Bean
+	public OperationsUIController operationsUIController() {
+		return new OperationsUIControllerImpl();
 	}
 	
 	@Bean
@@ -53,23 +64,9 @@ public class AppConfig {
 	}
 	
 	@Bean
-	@Scope("prototype")
-	public Credentials credentials() {
-		return new Credentials();
+	public ApplicationContext context() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+		context.register(ModelAppConfig.class);
+		return context;
 	}
-	
-	@Bean
-	@Scope("prototype")
-	public Account account() {
-		Account account = new Account();
-		account.setTransactions(new ArrayList<>());
-		return account;
-	}
-	
-	@Bean
-	@Scope("prototype")
-	public Transaction transaction() {
-		return new Transaction();
-	}
-	
 }
