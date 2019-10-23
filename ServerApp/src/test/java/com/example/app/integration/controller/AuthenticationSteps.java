@@ -1,8 +1,11 @@
 package com.example.app.integration.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -14,6 +17,7 @@ import com.example.app.model.Account;
 import com.example.app.model.Credentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.cucumber.core.api.Scenario;
 import io.cucumber.java8.En;
 
 
@@ -40,13 +44,6 @@ public class AuthenticationSteps implements En, DataInitialization {
 	private final String SUCCEEDS = "SUCCEEDS";
 	
 public AuthenticationSteps() {
-	
-		Given("there is an account with id {long} and pin {int}", (Long id, Integer pin) -> {
-			this.newAccount = this.initialize(this.newAccount);
-			this.newAccount.setId(id);
-			this.newAccount.setPin(pin);
-			this.createAccount(this.newAccount);
-		});
 		
 		Given("user provides the values {long} {int}", (Long id, Integer pin) -> {
 			credentials.setAccountNumber(id);
@@ -63,15 +60,25 @@ public AuthenticationSteps() {
 			 response.andExpect(this.getExpectedStatus(expectedResult));			 
 		});
 	}
+
+	@BeforeClass
+	public void init() throws Exception {
+		this.newAccount = this.initialize(this.newAccount);
+		this.response = mvc.perform(post(HOST + API_VERSION + URI_MODULE)
+			      .contentType(MediaType.APPLICATION_JSON_UTF8)
+			      .content(mapper.writeValueAsString(newAccount))
+			      .accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());
+	}
+
+
+	@AfterClass
+	public void clean(Scenario scenario) throws Exception {
+		this.response = mvc.perform(delete(HOST + API_VERSION + URI_MODULE + "?id=" + this.newAccount.getId())
+			      .contentType(MediaType.APPLICATION_JSON_UTF8)
+			      .accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());	 
+	}
 	
 	private ResultMatcher getExpectedStatus(String expectedResult) {
 		return expectedResult.equals(SUCCEEDS) ? status().isOk() : status().isUnprocessableEntity();
-	}
-	
-	private void createAccount(Account account) throws Exception {
-		this.response = mvc.perform(post(HOST + API_VERSION + URI_MODULE)
-			      .contentType(MediaType.APPLICATION_JSON)
-			      .content(mapper.writeValueAsString(account))
-			      .accept(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().isOk());	 
 	}
 }

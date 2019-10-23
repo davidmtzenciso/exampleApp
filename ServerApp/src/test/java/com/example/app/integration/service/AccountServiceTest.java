@@ -34,7 +34,6 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Before
 	public void init() {
-		this.savedAccount = null;
 		this.account = this.initialize(this.account);
 		this.transaction = this.initialize(this.transaction, this.account);
 	}
@@ -94,7 +93,7 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testDeleteNonExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
-		Assert.assertNotNull(service.deleteAccount(new Long(0)));
+		Assert.assertNotNull(service.deleteAccount(new Long(1231231312)));
 	}
 	
 	@Test(expected = OverdrawnAccountException.class)
@@ -115,7 +114,7 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testGetBalanceNonExistingAccount() throws AccountNotFoundException {
-		Assert.assertNotNull(this.service.getBalance(new Long(0)));
+		Assert.assertNotNull(this.service.getBalance(new Long(1323423423)));
 	}
 	
 	//		GET ACCOUNT BY ID AND PIN TEST
@@ -129,7 +128,7 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testGetAccountbyIdNPinNonExistent() throws AccountNotFoundException, FailedEntityValidationException {		
-		this.service.getAccountbyIdNPin(new Long(0), 1234);
+		this.service.getAccountbyIdNPin(new Long(1252153452), 1234);
 	}
 	
 	
@@ -145,7 +144,7 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testMakeDepositInNonExistentAccount() throws FailedEntityValidationException, AccountNotFoundException {		
-		this.transaction.getAccount().setId(new Long(0));
+		this.transaction.getAccount().setId(new Long(235235231));
 		Assert.assertNotNull(this.service.makeDeposit(this.transaction));
 	}
 	
@@ -169,8 +168,8 @@ public class AccountServiceTest implements DataInitialization {
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
-	public void testMakeWithdreawalWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException {
-		this.account.setId(new Long(0));
+	public void testMakeWithdreawalWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
+		this.account.setId(new Long(1346272436));
 		this.service.makeWithdrawal(transaction);
 	}
 	

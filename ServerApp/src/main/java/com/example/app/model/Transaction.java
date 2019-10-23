@@ -51,7 +51,17 @@ public class Transaction implements Serializable {
 	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 	
+	public Transaction() {}
 	
+	public Transaction(Long id, Date date, Integer type, Double amount, String description, Account account) {
+		this.id = id;
+		this.date = date;
+		this.type = type;
+		this.amount = amount;
+		this.description = description;
+		this.account = account;
+	}
+
 	public Long getId() {
 		return id;
 	}

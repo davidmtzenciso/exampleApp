@@ -1,18 +1,15 @@
 Feature: Delete an Account 
 
-	Background:
-       Given there is an account with id 2
-
-	Scenario Outline: <testCase> <expectedResult>
+	Scenario Outline: <testCase> delete <expectedResult>
 	 
-		Given user provides the value <id>
+		Given user provides the id <id> of the account to delete
 		
 		When user wants to delete the account '<testCase>'
 		
 		Then delete '<expectedResult>'
 		
 		Examples:
-			| testCase                  	 | expectedResult | id | 
-			| WITH NON EXISTING ID				 | FAILS				  | 1  |
-			| WITH EMPTY ID								 | FAILS					|    |
-			| WITH EXISTING ID						 | SUCCEEDS      	| 2  | 
+			| testCase                  	 | expectedResult | id       | 
+			| WITH NON EXISTING ID				 | FAILS				  | 2234234  |
+			| WITH EMPTY ID								 | FAILS					| 0        |
+			| WITH EXISTING ID						 | SUCCEEDS      	| 1 			 | 

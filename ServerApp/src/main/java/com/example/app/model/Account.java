@@ -47,7 +47,7 @@ public class Account implements Serializable {
 	@Column(nullable=false)
 	private Double balance;
 	
-	@OneToMany(mappedBy="account", fetch=FetchType.LAZY, cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy="account", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE)
 	private Set<Transaction> transactions;
 	
 	@JsonIgnore

@@ -134,7 +134,7 @@ public class AccountServiceTest implements DataInitialization  {
 	// 		 MAKE DEPOSIT TESTS
 	
 	@Test(expected = AccountNotFoundException.class)
-	public void testMakeDepositInNonExistentAccount() throws AccountNotFoundException {
+	public void testMakeDepositInNonExistentAccount() throws AccountNotFoundException, FailedEntityValidationException {
 		transaction.getAccount().setId(new Long(1));
 		
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
@@ -142,7 +142,7 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test
-	public void testMakeDepositInExistingAccount() throws AccountNotFoundException {
+	public void testMakeDepositInExistingAccount() throws AccountNotFoundException, FailedEntityValidationException {
 		transaction.getAccount().setId(new Long(1));
 		
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
@@ -153,7 +153,7 @@ public class AccountServiceTest implements DataInitialization  {
 	//		 MAKE WITHDRAWAL TESTS
 	
 	@Test
-	public void testMakeWithdrawalWithCorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
+	public void testMakeWithdrawalWithCorrectAmount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		this.account.setId(new Long(1));
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
 		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
@@ -161,7 +161,7 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test(expected = InsuficientFundsException.class)
-	public void testMakeWithdrawalWithIncorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
+	public void testMakeWithdrawalWithIncorrectAmount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		this.account.setId(new Long(1));
 		this.transaction.setAmount(2000.0);
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
@@ -170,7 +170,7 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
-	public void saveTransactionWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException {
+	public void testMakeWithdrawalWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
 		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
 		this.service.makeWithdrawal(this.transaction);
