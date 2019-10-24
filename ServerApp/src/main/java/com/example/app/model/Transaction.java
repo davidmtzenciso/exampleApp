@@ -12,7 +12,11 @@ import org.springframework.stereotype.Component;
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Component
 @Scope("prototype")
@@ -27,10 +31,10 @@ public class Transaction implements Serializable {
 	
 	@JsonFormat(pattern="yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
-	@Column(nullable=false, length=10)
+	@Column(name="date_", nullable=false, length=10)
 	private Date date;
 	
-	@Column(nullable=false)
+	@Column(name="type_", nullable=false)
 	private Integer type;
 	
 	@Column(nullable=false)
@@ -39,14 +43,28 @@ public class Transaction implements Serializable {
 	@Column(nullable=false, length=50)
 	private String description;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonInclude(Include.NON_NULL)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name="account_id")
+	@JsonIdentityInfo(
+	  generator = ObjectIdGenerators.PropertyGenerator.class, 
+	  property = "id")
 	private Account account;
 	
 	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 	
+	public Transaction() {}
 	
+	public Transaction(Long id, Date date, Integer type, Double amount, String description, Account account) {
+		this.id = id;
+		this.date = date;
+		this.type = type;
+		this.amount = amount;
+		this.description = description;
+		this.account = account;
+	}
+
 	public Long getId() {
 		return id;
 	}

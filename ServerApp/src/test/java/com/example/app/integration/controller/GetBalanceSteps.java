@@ -1,0 +1,53 @@
+package com.example.app.integration.controller;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
+
+import com.example.app.conf.DataInitialization;
+
+import io.cucumber.java8.En;
+
+public class GetBalanceSteps implements En, DataInitialization  {
+
+	@Autowired
+    private MockMvc mvc;
+	
+	private ResultActions response;
+	private int id;
+	
+	private final String HOST = "http://localhost:8080";
+	private final String API_VERSION = "/1.0.0";
+	private final String URI_MODULE = "/account";
+	private final String URI_GET_BALANCE = "/balance";
+	private final String SUCCEEDS = "SUCCEEDS";
+	
+	public GetBalanceSteps() { 
+
+		Given("user provides the id {int} of the account to query", (Integer id) -> {
+			this.id = id;
+		});
+		
+		When("user wants to get his account balance {string}", (String testContext) -> {
+			 this.response = mvc.perform(get(HOST + API_VERSION + URI_MODULE + URI_GET_BALANCE + "?id=" + this.id)
+				      .contentType(MediaType.APPLICATION_JSON_UTF8)
+				      .accept(MediaType.APPLICATION_JSON_UTF8));	 
+		});
+		
+		Then("the balance query {string}", (String expectedResult) -> {
+			 response.andExpect(this.getExpectedStatus(expectedResult));
+		});
+	}
+
+	private ResultMatcher getExpectedStatus(String expectedResult) {
+		return expectedResult.equals(SUCCEEDS) ? status().isOk() : status().isUnprocessableEntity();
+	}
+	
+}
+

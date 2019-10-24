@@ -1,7 +1,6 @@
 package com.example.app.unit.service;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+
 import static org.mockito.Mockito.when;
 
 import java.util.NoSuchElementException;
@@ -16,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.app.conf.DataInitialization;
@@ -122,8 +123,9 @@ public class AccountServiceTest implements DataInitialization  {
 	//		 GET ACCOUNT BY ID AND PIN TESTS
 	
 	@Test
-	public void testFindByIdAndPinExistent() throws AccountNotFoundException {
-		when(accountRepositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(this.account);
+	public void testFindByIdAndPinExistent() throws AccountNotFoundException {		
+		when(accountRepositoryMock.findByIdAndPin(Mockito.anyLong(), Mockito.anyInt())).thenReturn(this.account);
+		when(transactionRepositoryMock.findByAccount(Mockito.any(Account.class), Mockito.any(Pageable.class))).thenReturn(Page.empty());
 		Assert.assertNotNull(this.service.getAccountbyIdNPin(new Long(1), 1234));
 	}
 	
@@ -136,7 +138,7 @@ public class AccountServiceTest implements DataInitialization  {
 	// 		 MAKE DEPOSIT TESTS
 	
 	@Test(expected = AccountNotFoundException.class)
-	public void testMakeDepositInNonExistentAccount() throws AccountNotFoundException {
+	public void testMakeDepositInNonExistentAccount() throws AccountNotFoundException, FailedEntityValidationException {
 		transaction.getAccount().setId(new Long(1));
 		
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
@@ -144,7 +146,7 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test
-	public void testMakeDepositInExistingAccount() throws AccountNotFoundException {
+	public void testMakeDepositInExistingAccount() throws AccountNotFoundException, FailedEntityValidationException {
 		transaction.getAccount().setId(new Long(1));
 		
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
@@ -155,7 +157,7 @@ public class AccountServiceTest implements DataInitialization  {
 	//		 MAKE WITHDRAWAL TESTS
 	
 	@Test
-	public void testMakeWithdrawalWithCorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
+	public void testMakeWithdrawalWithCorrectAmount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		this.account.setId(new Long(1));
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
 		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
@@ -163,7 +165,7 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test(expected = InsuficientFundsException.class)
-	public void testMakeWithdrawalWithIncorrectAmount() throws InsuficientFundsException, AccountNotFoundException {
+	public void testMakeWithdrawalWithIncorrectAmount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		this.account.setId(new Long(1));
 		this.transaction.setAmount(2000.0);
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
@@ -172,7 +174,7 @@ public class AccountServiceTest implements DataInitialization  {
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
-	public void saveTransactionWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException {
+	public void testMakeWithdrawalWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
 		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
 		this.service.makeWithdrawal(this.transaction);

@@ -3,15 +3,39 @@ package com.example.app.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class Transaction implements Serializable {
 
 	private Long id;
+	
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date date;
+	
 	private Integer type;
 	private Double amount;
 	private String description;
+	
+	@JsonInclude(Include.NON_NULL)
+	@JsonIdentityInfo(
+			  generator = ObjectIdGenerators.PropertyGenerator.class, 
+			  property = "id")
+	private Account account;
+	
+	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 	
+	public Transaction() {}
+		
+	public Transaction(Account account) {
+		this.account = account;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -50,5 +74,13 @@ public class Transaction implements Serializable {
 	
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Account getAccount() {
+		return account;
+	}
+
+	public void setAccount(Account account) {
+		this.account = account;
 	}
 }

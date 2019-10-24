@@ -34,7 +34,6 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Before
 	public void init() {
-		this.savedAccount = null;
 		this.account = this.initialize(this.account);
 		this.transaction = this.initialize(this.transaction, this.account);
 	}
@@ -42,20 +41,38 @@ public class AccountServiceTest implements DataInitialization {
 	//		SAVE ACCOUNT TESTS
 	
 	@Test(expected = FailedEntityValidationException.class)
-	public void testSaveWithoutFirstName() throws FailedEntityValidationException {
+	public void testSaveWithtFirstNameNull() throws FailedEntityValidationException {
 		this.account.setFirstName(null);
 		this.savedAccount = service.save(this.account);
 	}
 	
 	@Test(expected = FailedEntityValidationException.class)
-	public void testSaveWithoutLastName() throws FailedEntityValidationException {
+	public void testSaveWithtFirstNameEmpty() throws FailedEntityValidationException {
+		this.account.setFirstName("");
+		this.savedAccount = service.save(this.account);
+	}
+	
+	@Test(expected = FailedEntityValidationException.class)
+	public void testSaveWithLastNameNull() throws FailedEntityValidationException {
 		this.account.setLastName(null);
+		this.savedAccount = service.save(this.account);
+	}
+	
+	@Test(expected = FailedEntityValidationException.class)
+	public void testSaveWithLastNameEmpty() throws FailedEntityValidationException {
+		this.account.setLastName("");
 		this.savedAccount = service.save(this.account);
 	}
 	
 	@Test(expected = FailedEntityValidationException.class)
 	public void testSaveWithoutPin() throws FailedEntityValidationException {
 		this.account.setPin(null);
+		this.savedAccount = service.save(this.account);
+	}
+	
+	@Test(expected = FailedEntityValidationException.class)
+	public void testSaveWithPinCero() throws FailedEntityValidationException {
+		this.account.setPin(0);
 		this.savedAccount = service.save(this.account);
 	}
 	
@@ -76,7 +93,7 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testDeleteNonExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
-		Assert.assertNotNull(service.deleteAccount(new Long(1)));
+		Assert.assertNotNull(service.deleteAccount(new Long(1231231312)));
 	}
 	
 	@Test(expected = OverdrawnAccountException.class)
@@ -97,21 +114,20 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testGetBalanceNonExistingAccount() throws AccountNotFoundException {
-		Assert.assertNotNull(this.service.getBalance(new Long(1)));
+		Assert.assertNotNull(this.service.getBalance(new Long(1323423423)));
 	}
 	
 	//		GET ACCOUNT BY ID AND PIN TEST
 	
 	@Test
-	public void testGetAccountbyIdNPinExistent() throws AccountNotFoundException, FailedEntityValidationException {
-		this.savedAccount = service.save(this.account);
-		
-		Assert.assertNotNull(this.service.getAccountbyIdNPin(this.savedAccount.getId(), this.savedAccount.getPin()));
+	public void testGetAccountbyIdNPinExistentWithFirstFive() throws AccountNotFoundException, FailedEntityValidationException {
+		Account account = this.service.getAccountbyIdNPin(new Long(1), 1234);
+		Assert.assertEquals(5, account.getTransactions().size());
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testGetAccountbyIdNPinNonExistent() throws AccountNotFoundException, FailedEntityValidationException {		
-		this.service.getAccountbyIdNPin(new Long(0), 1234);
+		this.service.getAccountbyIdNPin(new Long(1252153452), 1234);
 	}
 	
 	
@@ -127,7 +143,7 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testMakeDepositInNonExistentAccount() throws FailedEntityValidationException, AccountNotFoundException {		
-		this.transaction.getAccount().setId(new Long(0));
+		this.transaction.getAccount().setId(new Long(235235231));
 		Assert.assertNotNull(this.service.makeDeposit(this.transaction));
 	}
 	
@@ -151,8 +167,8 @@ public class AccountServiceTest implements DataInitialization {
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
-	public void testMakeWithdreawalWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException {
-		this.account.setId(new Long(1));
+	public void testMakeWithdreawalWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
+		this.account.setId(new Long(1346272436));
 		this.service.makeWithdrawal(transaction);
 	}
 	

@@ -13,59 +13,63 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 
-public interface HttpCommunication {
+public abstract class HttpCommunication {
 	
-	default CloseableHttpAsyncClient post(String url, String data, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) throws UnsupportedEncodingException  {
+	public static final String HEADER = "Content-Type";
+	public static final String VALUE = "application/json; charset=utf-8";
+	
+
+	protected CloseableHttpAsyncClient post(String url, String data, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) throws UnsupportedEncodingException  {
 		CloseableHttpAsyncClient httpclient;
 		HttpPost post;
         
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
         post = new HttpPost(url);
-        post.addHeader("Content-Type", "application/json; charset=utf-8");
+        post.addHeader(HEADER, VALUE);
         post.setEntity(new StringEntity(data));
         httpclient.execute(post, getCallback(onResponse, onError));
         return httpclient; 
 	}
 	
-	default CloseableHttpAsyncClient put(String url, String data, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) throws UnsupportedEncodingException  {
+	protected CloseableHttpAsyncClient put(String url, String data, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) throws UnsupportedEncodingException  {
 		CloseableHttpAsyncClient httpclient;
 		HttpPut put;
         
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
         put = new HttpPut(url);
-        put.addHeader("Content-Type", "application/json; charset=utf-8");
+        put.addHeader(HEADER, VALUE);
         put.setEntity(new StringEntity(data));
         httpclient.execute(put, getCallback(onResponse, onError));
         return httpclient;
 	}
 	
-	default CloseableHttpAsyncClient delete(String url, Consumer<HttpResponse> onResponse, Consumer<Exception> onError)  {
+	protected CloseableHttpAsyncClient delete(String url, Consumer<HttpResponse> onResponse, Consumer<Exception> onError)  {
 		CloseableHttpAsyncClient httpclient;
 		HttpDelete delete;
         
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
         delete = new HttpDelete(url);
-        delete.addHeader("Content-Type", "application/json; charset=utf-8");
+        delete.addHeader(HEADER, VALUE);
         httpclient.execute(delete, getCallback(onResponse, onError));
         return httpclient;
 	}
 	
-	default CloseableHttpAsyncClient get(String url, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) {
+	protected CloseableHttpAsyncClient get(String url, Consumer<HttpResponse> onResponse, Consumer<Exception> onError) {
 		CloseableHttpAsyncClient httpclient;
 		HttpGet get;
         
         httpclient = HttpAsyncClients.createDefault();
         httpclient.start();
         get = new HttpGet(url);
-        get.addHeader("Content-Type", "application/json; charset=utf-8");
+        get.addHeader(HEADER, VALUE);
         httpclient.execute(get, getCallback(onResponse, onError));
         return httpclient;
 	}
 	
-	default FutureCallback<HttpResponse> getCallback(Consumer<HttpResponse> onResponse, Consumer<Exception> onError) {
+	protected FutureCallback<HttpResponse> getCallback(Consumer<HttpResponse> onResponse, Consumer<Exception> onError) {
 		return new FutureCallback<HttpResponse>() {
 
 			@Override

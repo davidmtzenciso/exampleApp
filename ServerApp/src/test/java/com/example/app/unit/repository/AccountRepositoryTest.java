@@ -1,6 +1,7 @@
 package com.example.app.unit.repository;
 
-import org.junit.After;
+
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,51 +33,7 @@ public class AccountRepositoryTest implements DataInitialization {
 		this.newAccount = this.initialize(this.newAccount);
 	}
 	
-	@After
-	public void clean() {
-		if(this.saved != null) {
-			this.repository.deleteById(this.saved.getId());
-			this.saved = null;
-		}
-	}
-	
-	@Test
-	public void testFindByIdAndPinExisting() {
-		this.saved = this.repository.save(this.newAccount);
-		Assert.assertNotNull(this.repository.findByIdAndPin(this.saved.getId(), this.saved.getPin()));
-	}
-	
-	@Test
-	public void testFindAndLockByIdWithUnlocked() {
-		this.saved = this.repository.save(this.newAccount);
-		Account lockedAccount = this.repository.findAndLockById(this.saved.getId());
-		Assert.assertNotNull(lockedAccount);
-	}
-	
-	@Test
-	public void testFindAndLockByIdWithlocked() {
-		this.saved = this.repository.save(this.newAccount);
-		Account lockedAccount = this.repository.findAndLockById(this.saved.getId());
-		Assert.assertNotNull(lockedAccount);
-	}
-	
-	@Test
-	public void testFindAndLockByIdNonExistent() {
-		Account lockedAccount = this.repository.findAndLockById(new Long(1));
-		Assert.assertNull(lockedAccount);
-	}
-	
-	@Test(expected = EmptyResultDataAccessException.class)
-	public void testDeleteNonExisting() {
-		this.repository.deleteById(new Long(0));
-	}
-	
-	@Test
-	public void testDeleteExisting() {
-		this.saved = this.repository.save(this.newAccount);
-		this.repository.deleteById(this.saved.getId());
-		this.saved = null;
-	}
+	//			SAVE ACCOUNT TESTS
 	
 	@Test(expected = DataIntegrityViolationException.class)
 	public void testSaveWithoutFirstName() {		
@@ -101,5 +58,51 @@ public class AccountRepositoryTest implements DataInitialization {
 		this.saved = this.repository.save(this.newAccount);
 		Assert.assertNotNull(saved);
 	}
+	
+	//		FIND BY ID AND PIN TESTS
+	
+	@Test
+	public void testFindByIdAndPinExisting() {
+		this.saved = this.repository.save(this.newAccount);
+		Assert.assertNotNull(this.repository.findByIdAndPin(this.saved.getId(), this.saved.getPin()));
+	}
+	
+	//		FIND AND LOCK BY ID
+	
+	@Test
+	public void testFindAndLockByIdWithUnlocked() {
+		this.saved = this.repository.save(this.newAccount);
+		Account lockedAccount = this.repository.findAndLockById(this.saved.getId());
+		Assert.assertNotNull(lockedAccount);
+	}
+	
+	
+	@Test
+	public void testFindAndLockByIdWithlocked() {
+		this.saved = this.repository.save(this.newAccount);
+		Account lockedAccount = this.repository.findAndLockById(this.saved.getId());
+		Assert.assertNotNull(lockedAccount);
+	}
+	
+	@Test
+	public void testFindAndLockByIdNonExistent() {
+		Account lockedAccount = this.repository.findAndLockById(new Long(112312312));
+		Assert.assertNull(lockedAccount);
+	}
+	
+	// 		DELETE ACCOUNT TESTS
+	
+	@Test(expected = EmptyResultDataAccessException.class)
+	public void testDeleteNonExisting() {
+		this.repository.deleteById(new Long(1234233123));
+	}
+	
+	@Test
+	public void testDeleteExisting() {
+		this.saved = this.repository.save(this.newAccount);
+		this.repository.deleteById(this.saved.getId());
+	}
+	
+	
 	
 }

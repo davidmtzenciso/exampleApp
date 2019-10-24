@@ -2,23 +2,37 @@ package com.example.app.ui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.app.exceptions.AttemptsExceededException;
+import com.example.app.exceptions.MalformedRequestException;
 import com.example.app.model.Account;
+import com.example.app.uicontroller.HomeUIController;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class HomeUI {
+public class HomeUI  {
+	
+	@Autowired
+	private LoginUI loginUI;
+	
+	@Autowired
+	private OperationsUI operationsUI;
 	
 	@Autowired
 	private BufferedReader reader;
 	
+	@Autowired
+	private HomeUIController uiController;
+		
+	private boolean responseRecived;
+	
 	private final int OPEN_ACCOUNT = 1;
-	private final int CLOSE_ACCOUNT = 2;
-	private final int MAKE_DEPOSIT = 3;
-	private final int WITHDRAWAL = 4;
-	private final int EXIT = 5;
-	private final String MENU_OPERATIONS = "\n1-.Open Account\n2-.Close Account\n3-.Make Deposit\n4-.Withdrawal\n4-.Account Balance\n5-.Exit";
+	private final int LOGIN = 2;
+	private final int EXIT = 3;
+	private final String HOME_MENU = "1-.Open account\n2-.Log in\n3-.Exit\nOption: ";
+	private final String UNSUPPORTED_OPTION = "entry error, non existent option";
 	private final String OPEN_ACCOUNT_SEC = "Open Account\n";
 	private final String PROMPT_FIRST_NAME = "\nFirst name: ";
 	private final String PROMPT_LAST_NAME = "\nLast name:";
@@ -30,41 +44,63 @@ public class HomeUI {
 	private final String ERROR_FIRST_NAME_REQUIRED = "First name is required, entry cannot be empty";
 	private final String ERROR_LAST_NAME_REQUIRED = "Last name is required, entry cannot be empty";
 	private final String ERROR_ATTEMPTS_EXCEEDED = "attempts exceeded(3), operation canceled";
-	private final String PROMPT_ACCOUT_HOLDERS_ID = "\nID: ";
+	private final String PROMPT_ACCOUT_HOLDERS_ID = "\nAccount's holder ID: ";
 	private final String PROMPT_BALANCE = "\nInitial balance: ";
+	private final String READ_ERROR = "Input Error, please try again";
+	private final String ENTRY_ERROR = "invalid entry, it's not a number\n";
+	private final String EXIT_MSG = "System closed!";
 	
 	public void start() {
-		Account account;
-		
 		int option = 0;
 		
 		do {
 			try {
-				System.out.println(MENU_OPERATIONS);
+				responseRecived = false;
+				System.out.println(HOME_MENU);
 				option = Integer.parseInt(reader.readLine());
 				switch(option) {
 					case OPEN_ACCOUNT: 
-						account = createAccount(this.reader);
-						
-					case CLOSE_ACCOUNT:
+						openAccount();
 						break;
-					case MAKE_DEPOSIT:
-						break;
-					case WITHDRAWAL:
+					case LOGIN:
+						operationsUI.start(loginUI.authenticate());
+						responseRecived = true;
 						break;
 					case EXIT:
+						System.out.println(EXIT_MSG);
+						responseRecived = true;
 						break;
+					default:
+						System.out.println(UNSUPPORTED_OPTION);
+						responseRecived = true;
 				}
+				while(!responseRecived) { System.out.println();}
 			} catch(NumberFormatException e) {
-				System.err.println("invalid option, is not a number");
+				System.err.println(READ_ERROR);
 			} 
 			catch(AttemptsExceededException e) {
 				System.err.println(e.getMessage());
 			}
 			catch (IOException e) {
-				System.err.println("input error, please try again");
+				System.err.println(ENTRY_ERROR);
+			} 
+			catch(MalformedRequestException e) {
+				System.err.println(e.getMessage());
 			}
-		} while(option != 5);
+		} while(option != EXIT);
+	}
+	
+	private void openAccount() throws UnsupportedEncodingException, JsonProcessingException, MalformedRequestException, IOException, AttemptsExceededException {
+		uiController.setData(this.createAccount(reader))
+		  .setOnSuccess((response, data) -> {
+			  System.out.println(response + ", account number : " + data.getId() + ", pin: "+ data.getPin());
+			  responseRecived = true;
+		  })
+		  .setOnError(error -> {
+			  System.out.println(error.getMessage());
+			  responseRecived = true;
+		  })
+		  .openAccount();
 	}
 	
 	private Account createAccount(BufferedReader reader) throws IOException, AttemptsExceededException {
@@ -76,7 +112,7 @@ public class HomeUI {
 			account = readFirstNLastName(account, reader, 0);
 			account.setPin(readAccountPIN(reader, 0));
 			System.out.println(PROMPT_ACCOUT_HOLDERS_ID);
-			account.setAccountHoldersName(reader.readLine());
+			account.setAccountHoldersId(reader.readLine());
 			System.out.println(PROMPT_BALANCE);
 			balance = reader.readLine();
 			account.setBalance(balance.isEmpty() ? 0.0 : Double.parseDouble(balance));
@@ -98,12 +134,14 @@ public class HomeUI {
 				System.err.println(ERROR_FIRST_NAME_REQUIRED);
 				return readFirstNLastName(account, reader, attempts + 1);
 			} else { 
+				account.setFirstName(firstName);
 				System.out.println(PROMPT_LAST_NAME);
 				lastName = reader.readLine();
 				if(lastName.isEmpty()) {
 					System.err.println(ERROR_LAST_NAME_REQUIRED);
 					return readFirstNLastName(account, reader, attempts + 1);
 				} else {
+					account.setLastName(lastName);
 					return account;
 				}
 			}

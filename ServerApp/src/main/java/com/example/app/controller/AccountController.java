@@ -63,18 +63,18 @@ public class AccountController {
 	@RequestMapping(value = "/deposit", method = RequestMethod.POST,	
 					consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, 
 					produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody Transaction makeDeposit(@RequestBody Transaction operation) throws JsonProcessingException, AccountNotFoundException {
+	public @ResponseBody Transaction makeDeposit(@RequestBody Transaction operation) throws JsonProcessingException, AccountNotFoundException, FailedEntityValidationException {
 		return this.accountService.makeDeposit(operation);
 	}
 	
 	@RequestMapping(value = "/withdrawal", method = RequestMethod.POST,	
 			consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, 
 			produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody Transaction makeWithdrawal(@RequestBody Transaction operation) throws InsuficientFundsException, AccountNotFoundException {
+	public @ResponseBody Transaction makeWithdrawal(@RequestBody Transaction operation) throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		return this.accountService.makeWithdrawal(operation);
 	}
 	
-	@RequestMapping(value = "/debits-checks", method = RequestMethod.POST,
+	@RequestMapping(value = "/external/debits-checks", method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, 
 			produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody Long processDebitsNChecks(@RequestBody Transaction operation) throws FailedEntityValidationException {

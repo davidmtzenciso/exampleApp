@@ -5,22 +5,25 @@ import java.io.Serializable;
 public class Credentials implements Serializable {
 
 	private static final long serialVersionUID = -2468920800107022005L;
-	private Long accountNum;
+	private Long accountNumber;
 	private Integer pin;
 	
 	public Credentials() {}
 	
 	public Credentials(Long accountNum, Integer pin) {
 		super();
-		this.accountNum = accountNum;
+		this.accountNumber = accountNum;
 		this.pin = pin;
 	}
-	public Long getAccountNum() {
-		return accountNum;
+
+	public Long getAccountNumber() {
+		return accountNumber;
 	}
-	public void setAccountNum(Long accountNum) {
-		this.accountNum = accountNum;
+
+	public void setAccountNumber(Long accountNumber) {
+		this.accountNumber = accountNumber;
 	}
+
 	public Integer getPin() {
 		return pin;
 	}
