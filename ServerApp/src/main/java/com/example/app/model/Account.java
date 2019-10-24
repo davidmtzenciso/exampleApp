@@ -1,8 +1,8 @@
 package com.example.app.model;
 
 import java.io.Serializable;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,10 +18,12 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.example.app.model.Transaction;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Component
 @Scope("prototype")
@@ -49,9 +51,11 @@ public class Account implements Serializable {
 	@Column(nullable=false)
 	private Double balance;
 	
-	@JsonInclude(Include.ALWAYS)
-	@OneToMany(mappedBy="account", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE)
-	private Set<Transaction> transactions;
+	@JsonInclude(Include.NON_NULL)
+	@JsonSerialize(as=ArrayList.class)
+	@JsonDeserialize(as=ArrayList.class)
+	@OneToMany(mappedBy="account", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private List<Transaction> transactions;
 	
 	@JsonIgnore
 	private static final long serialVersionUID = -1051181485163125999L;
@@ -115,12 +119,12 @@ public class Account implements Serializable {
 		this.balance = balance;
 	}
 
-	public Set<Transaction> getTransactions() {
+	public List<Transaction> getTransactions() {
 		return transactions;
 	}
 
-	@JsonDeserialize(as=LinkedHashSet.class)
-	public void setTransactions(Set<Transaction> transactions) {
+	@JsonDeserialize(as=ArrayList.class)
+	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}
 }

@@ -3,6 +3,8 @@ package com.example.app.unit.service;
 
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -10,10 +12,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.app.conf.DataInitialization;
@@ -120,8 +125,9 @@ public class AccountServiceTest implements DataInitialization  {
 	//		 GET ACCOUNT BY ID AND PIN TESTS
 	
 	@Test
-	public void testFindByIdAndPinExistent() throws AccountNotFoundException {
-		when(accountRepositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(this.account);
+	public void testFindByIdAndPinExistent() throws AccountNotFoundException {		
+		when(accountRepositoryMock.findByIdAndPin(Mockito.anyLong(), Mockito.anyInt())).thenReturn(this.account);
+		when(transactionRepositoryMock.findByAccount(Mockito.any(Account.class), Mockito.any(Pageable.class))).thenReturn(Page.empty());
 		Assert.assertNotNull(this.service.getAccountbyIdNPin(new Long(1), 1234));
 	}
 	

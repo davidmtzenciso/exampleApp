@@ -3,14 +3,15 @@ package com.example.app.integration.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import com.example.app.model.Account;
 import com.example.app.model.Credentials;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,7 +50,11 @@ public AuthenticationSteps() {
 		});
 		
 		Then("authentication {string}", (String expectedResult) -> {	
-			 response.andExpect(this.getExpectedStatus(expectedResult));			 
+			 MvcResult result = response.andExpect(this.getExpectedStatus(expectedResult))
+			 	     .andReturn();
+			 if(expectedResult.equals(SUCCEEDS)) {
+				 Assert.assertEquals(5, mapper.readValue(result.getResponse().getContentAsByteArray(), Account.class).getTransactions().size());
+			 }
 		});
 	}
 

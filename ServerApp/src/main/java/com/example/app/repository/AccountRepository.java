@@ -22,5 +22,5 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
 	@QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value = "3000")})
 	@Query("SELECT A FROM Account A WHERE A.id = :id")
 	public Account findAndLockById(@Param("id") Long id);
-		
+			
 }

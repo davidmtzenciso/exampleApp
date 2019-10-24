@@ -23,8 +23,8 @@ public class HomeUI {
 	
 	private final int OPEN_ACCOUNT = 1;
 	private final int LOGIN = 2;
-	private final int EXIT = 5;
-	private final String HOME_MENU = "1-.log in\n2-.Open account\n3-.Exit";
+	private final int EXIT = 3;
+	private final String HOME_MENU = "1-.Open account\n2-.Log in\n3-.Exit\n";
 	private final String OPEN_ACCOUNT_SEC = "Open Account\n";
 	private final String PROMPT_FIRST_NAME = "\nFirst name: ";
 	private final String PROMPT_LAST_NAME = "\nLast name:";
@@ -41,7 +41,7 @@ public class HomeUI {
 	private final String READ_ERROR = "Input Error, please try again";
 	private final String ENTRY_ERROR = "invalid entry, it's not a number\n";
 	
-	public void start() {
+	public void start() throws InterruptedException {
 		int option = 0;
 		
 		do {

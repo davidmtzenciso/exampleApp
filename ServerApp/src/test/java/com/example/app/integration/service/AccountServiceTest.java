@@ -120,10 +120,9 @@ public class AccountServiceTest implements DataInitialization {
 	//		GET ACCOUNT BY ID AND PIN TEST
 	
 	@Test
-	public void testGetAccountbyIdNPinExistent() throws AccountNotFoundException, FailedEntityValidationException {
-		this.savedAccount = service.save(this.account);
-		
-		Assert.assertNotNull(this.service.getAccountbyIdNPin(this.savedAccount.getId(), this.savedAccount.getPin()));
+	public void testGetAccountbyIdNPinExistentWithFirstFive() throws AccountNotFoundException, FailedEntityValidationException {
+		Account account = this.service.getAccountbyIdNPin(new Long(1), 1234);
+		Assert.assertEquals(5, account.getTransactions().size());
 	}
 	
 	@Test(expected = AccountNotFoundException.class)

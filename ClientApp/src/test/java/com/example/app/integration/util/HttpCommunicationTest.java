@@ -24,6 +24,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.example.app.conf.AppConfig;
 import com.example.app.conf.DataInitialization;
+import com.example.app.conf.ModelAppConfig;
 import com.example.app.model.Account;
 import com.example.app.model.Credentials;
 import com.example.app.model.Transaction;
@@ -33,7 +34,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = AppConfig.class)
+@ContextConfiguration(classes = {AppConfig.class, ModelAppConfig.class})
 public class HttpCommunicationTest extends HttpCommunication implements DataInitialization  {
 	
 	@Autowired
@@ -206,7 +207,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 	
 	@Test
 	@DisplayName("test correct authentication")
-	public void testAuthetication(TestInfo info) throws IOException, InterruptedException {
+	public void testCorrectAuthetication(TestInfo info) throws IOException, InterruptedException {
 		LOG.info(info.getDisplayName());
 		credentials.setAccountNumber(this.accountSaved.getId());
 		credentials.setPin(this.accountSaved.getPin());
@@ -243,7 +244,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		
 		Thread.sleep(1000);
 		client.close();
-		Assertions.assertEquals(200, status, responseMsg);
+		Assertions.assertTrue(status == 200 && this.accountSaved.getTransactions().size() == 5, responseMsg);
 	}
 	
 

@@ -11,10 +11,13 @@ import org.springframework.stereotype.Component;
 
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Component
 @Scope("prototype")
@@ -41,7 +44,8 @@ public class Transaction implements Serializable {
 	@Column(nullable=false, length=50)
 	private String description;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonInclude(Include.NON_NULL)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name="account_id")
 	@JsonIdentityInfo(
 	  generator = ObjectIdGenerators.PropertyGenerator.class, 

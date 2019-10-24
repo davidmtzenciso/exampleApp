@@ -32,6 +32,5 @@ public class ModelAppConfig {
 	public Transaction transaction() {
 		return new Transaction();
 	}
-	
 
 }

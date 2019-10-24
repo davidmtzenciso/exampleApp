@@ -1,7 +1,14 @@
 package com.example.app.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class Account implements Serializable {
 
@@ -11,7 +18,13 @@ public class Account implements Serializable {
 	private Integer pin;
 	private String accountHoldersId;
 	private Double balance;
+	
+	@JsonInclude(Include.NON_EMPTY)
+	@JsonSerialize(as=ArrayList.class)
+	@JsonDeserialize(as=ArrayList.class)
 	private List<Transaction> transactions;
+	
+	@JsonIgnore
 	private static final long serialVersionUID = -2209620568224742038L;
 	
 	public Long getId() {

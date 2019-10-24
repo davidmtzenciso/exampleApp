@@ -5,6 +5,9 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.app.exception.AccountNotFoundException;
@@ -85,6 +88,8 @@ public class AccountServiceImpl implements AccountService {
 	public Account getAccountbyIdNPin(Long id, Integer pin) throws AccountNotFoundException {
 		Account account = accountRepository.findByIdAndPin(id, pin);
 		if(account != null) {
+			Pageable firstFiveByDate = PageRequest.of(0, 5, Sort.by("date").ascending());
+			account.setTransactions(this.transactionRepository.findByAccount(account, firstFiveByDate).getContent());
 			return account;
 		} else {
 			throw new AccountNotFoundException(LOGIN_FAILED);

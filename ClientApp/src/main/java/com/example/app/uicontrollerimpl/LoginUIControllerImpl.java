@@ -15,7 +15,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class LoginUIControllerImpl extends AbstractUIController implements LoginUIController{
 	
-	
 	@Autowired
 	private URLBuilder builder;
 	

@@ -82,7 +82,7 @@ public abstract class AbstractUIController extends HttpCommunication {
 					if(status == 200) {
 						try {
 							if(incomingData != null) {
-								incomingData.accept(mapper.readValue(response.getEntity().getContent(), Transaction.class));
+								incomingData.accept(mapper.readValue(response.getEntity().getContent(), type));
 							}
 						} catch (UnsupportedOperationException | IOException e) {
 							e.printStackTrace();

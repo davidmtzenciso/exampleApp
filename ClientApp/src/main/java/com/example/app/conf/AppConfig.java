@@ -3,7 +3,6 @@ package com.example.app.conf;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +23,9 @@ public class AppConfig {
 	
 	@Bean
 	public LoginUI logInUI() {
-		return new LoginUI();
+		LoginUI ui = new LoginUI();
+		ui.start();
+		return ui;
 	}
 	
 	@Bean
@@ -64,9 +65,10 @@ public class AppConfig {
 	}
 	
 	@Bean
-	public ApplicationContext context() {
+	public AnnotationConfigApplicationContext context() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 		context.register(ModelAppConfig.class);
+		context.refresh();
 		return context;
 	}
 }
