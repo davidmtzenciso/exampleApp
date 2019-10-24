@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;

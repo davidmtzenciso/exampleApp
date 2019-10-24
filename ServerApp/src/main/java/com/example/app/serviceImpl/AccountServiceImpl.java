@@ -1,6 +1,7 @@
 package com.example.app.serviceImpl;
 
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,9 +88,14 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Account getAccountbyIdNPin(Long id, Integer pin) throws AccountNotFoundException {
 		Account account = accountRepository.findByIdAndPin(id, pin);
+		Pageable firstFiveByDate;
+		List<Transaction> list;
+		
 		if(account != null) {
-			Pageable firstFiveByDate = PageRequest.of(0, 5, Sort.by("date").ascending());
-			account.setTransactions(this.transactionRepository.findByAccount(account, firstFiveByDate).getContent());
+			 firstFiveByDate = PageRequest.of(0, 5, Sort.by("date").ascending());
+			list = this.transactionRepository.findByAccount(account, firstFiveByDate).getContent();
+			list.forEach(transaction -> transaction.setAccount(null));
+			account.setTransactions(list);
 			return account;
 		} else {
 			throw new AccountNotFoundException(LOGIN_FAILED);
@@ -107,6 +113,9 @@ public class AccountServiceImpl implements AccountService {
 				try {
 					saved = transactionRepository.save(transaction);
 					lockedAccount.setBalance(lockedAccount.getBalance() + transaction.getAmount());
+					this.accountRepository.flush();
+					saved.setAccount(lockedAccount);
+					lockedAccount.setTransactions(null);
 				} catch(DataIntegrityViolationException e) {
 					throw new FailedEntityValidationException(INVALID_TRANSACTION);
 				}
@@ -133,6 +142,9 @@ public class AccountServiceImpl implements AccountService {
 					try {
 						saved = transactionRepository.save(transaction);
 						lockedAccount.setBalance(lockedAccount.getBalance() - transaction.getAmount());
+						this.accountRepository.flush();
+						lockedAccount.setTransactions(null);
+						saved.setAccount(lockedAccount);
 						return saved;
 					} catch(DataIntegrityViolationException e) {
 						throw new FailedEntityValidationException(INVALID_TRANSACTION);

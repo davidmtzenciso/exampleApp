@@ -6,13 +6,14 @@ import java.io.InputStreamReader;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 
 import com.example.app.ui.HomeUI;
 import com.example.app.ui.LoginUI;
 import com.example.app.ui.OperationsUI;
+import com.example.app.uicontroller.HomeUIController;
 import com.example.app.uicontroller.LoginUIController;
 import com.example.app.uicontroller.OperationsUIController;
+import com.example.app.uicontrollerimpl.HomeUIControllerImpl;
 import com.example.app.uicontrollerimpl.LoginUIControllerImpl;
 import com.example.app.uicontrollerimpl.OperationsUIControllerImpl;
 import com.example.app.util.URLBuilder;
@@ -23,9 +24,7 @@ public class AppConfig {
 	
 	@Bean
 	public LoginUI logInUI() {
-		LoginUI ui = new LoginUI();
-		ui.start();
-		return ui;
+		return new LoginUI();
 	}
 	
 	@Bean
@@ -36,6 +35,11 @@ public class AppConfig {
 	@Bean
 	public OperationsUI operationsUI() {
 		return new OperationsUI();
+	}
+	
+	@Bean
+	public HomeUIController homeUIController() {
+		return new HomeUIControllerImpl();
 	}
 	
 	@Bean
@@ -54,7 +58,6 @@ public class AppConfig {
 	}
 	
 	@Bean
-	@Scope("prototype")
 	public BufferedReader bufferedReader() {
 		return new BufferedReader(new InputStreamReader(System.in));
 	}

@@ -6,19 +6,21 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.example.app.exceptions.AuthenticationFailedException;
+import com.example.app.exceptions.AttemptsExceededException;
 import com.example.app.exceptions.MalformedRequestException;
 import com.example.app.model.Account;
 import com.example.app.model.Credentials;
 import com.example.app.uicontroller.LoginUIController;
 
-public class LoginUI extends Thread {
+public class LoginUI {
 	
 	@Autowired
 	private LoginUIController uiController;
 	
 	@Autowired
 	private BufferedReader reader;
+	
+	private Account active;
 	
 	@Autowired
 	private AnnotationConfigApplicationContext context;
@@ -28,10 +30,12 @@ public class LoginUI extends Thread {
 	private final String PROMPT_PIN = "\nPIN: ";
 	private final String READ_ERROR = "Input Error, please try again";
 	private final String ENTRY_ERROR = "invalid entry, it's not a number\n";
-	private int attempts;
+	private final String ERROR_ATTEMPTS_EXCEEDED = "attempts exceeded(3), operation canceled";
+
 	private boolean responseRecived;
+	private int attempts;
 		
-	public Account authenticate()  throws AuthenticationFailedException, MalformedRequestException, IOException, InterruptedException {
+	public Account authenticate()  throws MalformedRequestException, IOException, AttemptsExceededException {
 		Credentials credentials = context.getBean(Credentials.class);
 	    attempts = 0;
 		
@@ -44,18 +48,21 @@ public class LoginUI extends Thread {
 				System.out.println(PROMPT_PIN);
 				credentials.setPin(Integer.parseInt(reader.readLine()));
 				uiController.setData(credentials)
-							.setOnSuccess( response -> {
-								responseRecived = true;
+							.setOnSuccess( (response, data) -> {
+								attempts = 5;
+								this.active = data;
 								System.out.println(response);
-								attempts = 4;
+								responseRecived = true;
+
 							})
 							.setOnError(error -> {
-								responseRecived = true;
-								System.out.println(error);
+								System.out.println(error.getMessage());
 								attempts++;
+								responseRecived = true;
+
 							})
 							.authenticate();
-				System.out.println("authenticating");
+				while(!responseRecived) { System.out.println();}
 			} catch(IOException e) {
 				System.err.println(READ_ERROR);
 				attempts++;
@@ -63,11 +70,11 @@ public class LoginUI extends Thread {
 				System.err.println(ENTRY_ERROR);
 				attempts++;
 			} 
-			
-			System.out.println("authenticating");
-			while(!responseRecived) { System.out.print("."); }
 		} while(attempts < 3);
-		
-		return uiController.getActiveAccount();
+		if(attempts == 3) {
+			throw new AttemptsExceededException(ERROR_ATTEMPTS_EXCEEDED);
+		} else {
+			return active;
+		}
 	}
 }

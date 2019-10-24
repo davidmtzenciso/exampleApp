@@ -2,15 +2,17 @@ package com.example.app.ui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.app.exceptions.AttemptsExceededException;
-import com.example.app.exceptions.AuthenticationFailedException;
 import com.example.app.exceptions.MalformedRequestException;
 import com.example.app.model.Account;
+import com.example.app.uicontroller.HomeUIController;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class HomeUI {
+public class HomeUI  {
 	
 	@Autowired
 	private LoginUI loginUI;
@@ -21,10 +23,16 @@ public class HomeUI {
 	@Autowired
 	private BufferedReader reader;
 	
+	@Autowired
+	private HomeUIController uiController;
+		
+	private boolean responseRecived;
+	
 	private final int OPEN_ACCOUNT = 1;
 	private final int LOGIN = 2;
 	private final int EXIT = 3;
-	private final String HOME_MENU = "1-.Open account\n2-.Log in\n3-.Exit\n";
+	private final String HOME_MENU = "1-.Open account\n2-.Log in\n3-.Exit\nOption: ";
+	private final String UNSUPPORTED_OPTION = "entry error, non existent option";
 	private final String OPEN_ACCOUNT_SEC = "Open Account\n";
 	private final String PROMPT_FIRST_NAME = "\nFirst name: ";
 	private final String PROMPT_LAST_NAME = "\nLast name:";
@@ -36,28 +44,37 @@ public class HomeUI {
 	private final String ERROR_FIRST_NAME_REQUIRED = "First name is required, entry cannot be empty";
 	private final String ERROR_LAST_NAME_REQUIRED = "Last name is required, entry cannot be empty";
 	private final String ERROR_ATTEMPTS_EXCEEDED = "attempts exceeded(3), operation canceled";
-	private final String PROMPT_ACCOUT_HOLDERS_ID = "\nID: ";
+	private final String PROMPT_ACCOUT_HOLDERS_ID = "\nAccount's holder ID: ";
 	private final String PROMPT_BALANCE = "\nInitial balance: ";
 	private final String READ_ERROR = "Input Error, please try again";
 	private final String ENTRY_ERROR = "invalid entry, it's not a number\n";
+	private final String EXIT_MSG = "System closed!";
 	
-	public void start() throws InterruptedException {
+	public void start() {
 		int option = 0;
 		
 		do {
 			try {
+				responseRecived = false;
 				System.out.println(HOME_MENU);
 				option = Integer.parseInt(reader.readLine());
 				switch(option) {
 					case OPEN_ACCOUNT: 
-						operationsUI.start(createAccount(this.reader));
+						openAccount();
 						break;
 					case LOGIN:
 						operationsUI.start(loginUI.authenticate());
+						responseRecived = true;
 						break;
 					case EXIT:
+						System.out.println(EXIT_MSG);
+						responseRecived = true;
 						break;
+					default:
+						System.out.println(UNSUPPORTED_OPTION);
+						responseRecived = true;
 				}
+				while(!responseRecived) { System.out.println();}
 			} catch(NumberFormatException e) {
 				System.err.println(READ_ERROR);
 			} 
@@ -66,12 +83,24 @@ public class HomeUI {
 			}
 			catch (IOException e) {
 				System.err.println(ENTRY_ERROR);
-			} catch(AuthenticationFailedException e) {
-				System.err.println(e.getMessage());
-			} catch(MalformedRequestException e) {
+			} 
+			catch(MalformedRequestException e) {
 				System.err.println(e.getMessage());
 			}
-		} while(option != 5);
+		} while(option != EXIT);
+	}
+	
+	private void openAccount() throws UnsupportedEncodingException, JsonProcessingException, MalformedRequestException, IOException, AttemptsExceededException {
+		uiController.setData(this.createAccount(reader))
+		  .setOnSuccess((response, data) -> {
+			  System.out.println(response + ", account number : " + data.getId() + ", pin: "+ data.getPin());
+			  responseRecived = true;
+		  })
+		  .setOnError(error -> {
+			  System.out.println(error.getMessage());
+			  responseRecived = true;
+		  })
+		  .openAccount();
 	}
 	
 	private Account createAccount(BufferedReader reader) throws IOException, AttemptsExceededException {
@@ -105,12 +134,14 @@ public class HomeUI {
 				System.err.println(ERROR_FIRST_NAME_REQUIRED);
 				return readFirstNLastName(account, reader, attempts + 1);
 			} else { 
+				account.setFirstName(firstName);
 				System.out.println(PROMPT_LAST_NAME);
 				lastName = reader.readLine();
 				if(lastName.isEmpty()) {
 					System.err.println(ERROR_LAST_NAME_REQUIRED);
 					return readFirstNLastName(account, reader, attempts + 1);
 				} else {
+					account.setLastName(lastName);
 					return account;
 				}
 			}

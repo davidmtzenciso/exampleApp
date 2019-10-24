@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.example.app.model.Transaction;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -51,7 +50,7 @@ public class Account implements Serializable {
 	@Column(nullable=false)
 	private Double balance;
 	
-	@JsonInclude(Include.NON_NULL)
+	@JsonInclude(Include.NON_EMPTY)
 	@JsonSerialize(as=ArrayList.class)
 	@JsonDeserialize(as=ArrayList.class)
 	@OneToMany(mappedBy="account", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
@@ -123,7 +122,6 @@ public class Account implements Serializable {
 		return transactions;
 	}
 
-	@JsonDeserialize(as=ArrayList.class)
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}

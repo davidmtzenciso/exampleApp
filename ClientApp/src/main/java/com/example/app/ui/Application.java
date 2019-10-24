@@ -7,7 +7,7 @@ import com.example.app.conf.ModelAppConfig;
 
 public class Application {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args)  {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 		HomeUI homeUI;
 		

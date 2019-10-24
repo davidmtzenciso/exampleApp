@@ -10,14 +10,14 @@ import com.example.app.model.Account;
 import com.example.app.model.RequestError;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public interface LoginUIController  {
+public interface HomeUIController {
+
+	public HomeUIController setData(Object data);
 	
-	public LoginUIController setData(Object data);
+	public HomeUIController setOnSuccess(BiConsumer<String, Account> consumer);
 	
-	public LoginUIController setOnSuccess(BiConsumer<String, Account> consumer);
+	public HomeUIController setOnError(Consumer<RequestError> consumer);
 	
-	public LoginUIController setOnError(Consumer<RequestError> consumer);
+	public void openAccount() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException;
 	
-	public void authenticate() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException;
-		
 }
