@@ -69,7 +69,6 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		return builder.toString();
 	}
 	
-	@BeforeEach
 	public void init(TestInfo info) throws UnsupportedEncodingException, JsonProcessingException, IOException, InterruptedException {
 		CloseableHttpAsyncClient client;
 		
@@ -109,7 +108,6 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		}
 	}
 	
-	@AfterEach
 	public void clean(TestInfo info) throws IOException, InterruptedException {
 		CloseableHttpAsyncClient client;
 		
@@ -205,7 +203,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 	}
 		
 	
-	@Test
+	//@Test
 	@DisplayName("test correct authentication")
 	public void testCorrectAuthetication(TestInfo info) throws IOException, InterruptedException {
 		LOG.info(info.getDisplayName());
@@ -248,7 +246,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 	}
 	
 
-	@Test
+	//@Test
 	@DisplayName("test correct get balance")
 	public void testGetBalance(TestInfo info) throws IOException, InterruptedException {
 		LOG.info(info.getDisplayName());
@@ -276,7 +274,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		Assertions.assertEquals(200, status, responseMsg);
 	}
 	
-	@Test
+	//@Test
 	@DisplayName("test correct make a deposit")
 	public void testMakeDeposit(TestInfo info) throws IOException, InterruptedException {	
 		LOG.info(info.getDisplayName());
@@ -308,7 +306,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		Assertions.assertEquals(200, status, responseMsg);Thread.sleep(1000);
 	}
 	
-	@Test
+	//@Test
 	@DisplayName("test correct make a withdrawal")
 	public void testMakeWithdrawal(TestInfo info) throws IOException, InterruptedException {
 		LOG.info(info.getDisplayName());
@@ -340,7 +338,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		Assertions.assertEquals(200, status, responseMsg);Thread.sleep(1000);
 	}
 	
-	@Test
+	//@Test
 	@DisplayName("test correct external debits and checks")
 	public void testExternalDebitsNChecks(TestInfo info) throws IOException, InterruptedException {
 		LOG.info(info.getDisplayName());
