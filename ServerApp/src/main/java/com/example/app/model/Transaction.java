@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Component
-@Scope("prototype")
+@Scope("request")
 @Entity
 @Table(name="transaction")
 public class Transaction implements Serializable {
