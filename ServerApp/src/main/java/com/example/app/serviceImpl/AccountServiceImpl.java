@@ -66,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
 				comparison = Double.compare(lockedAccount.getBalance(), 0.0);
 				if(comparison >= 0) {
 					accountRepository.delete(lockedAccount);
-					return "Account closed!";
+					return CLOSE_ACCOUNT_OK;
 				}
 				else {
 					throw new OverdrawnAccountException(OVERDRAWN);

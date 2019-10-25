@@ -26,7 +26,13 @@ public class OperationsUIControllerImpl extends AbstractUIController implements 
 	
 	private BiConsumer<String, Object> sendResponse;
 	
-	public OperationsUIControllerImpl() {
+	private final String TRANSACTION = ", transaction id: ";
+	private final String DEPOSIT_OK = "\ndeposit successful!";
+	private final String WITHDRAWAL_OK = "\nwithdrawal successful!";
+	private final String GET_BALANCE_OK = "\ncurrent balance: ";
+	private final String EXTERNAL_OK = "\noperation successful!";
+	
+	public void run() {
 		this.recent = new ArrayList<>();
 	}
 
@@ -47,29 +53,39 @@ public class OperationsUIControllerImpl extends AbstractUIController implements 
 		this.onError = consumer;
 		return this;
 	}
+	
+	public synchronized OperationsUIController setOnProgress(Consumer<Integer> consumer) {
+		this.onProgress = consumer;
+		return this;
+	}
 
 	public synchronized void makeDeposit()  throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
-		this.onSuccess = data -> sendResponse.accept("deposit successful!, transaction id: " + ((Transaction)data).getId(), recent.add((Transaction) data));
+		this.onProgress.accept(0);
+		this.onSuccess = data -> sendResponse.accept(DEPOSIT_OK + TRANSACTION + ((Transaction)data).getId(), recent.add((Transaction) data));
 		this.post(builder.makeDeposit(), Transaction.class);
 	}
 	
 	public synchronized void makeWithdrawal()  throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
-		this.onSuccess = data -> sendResponse.accept("withdrawal successful!, transaction id: " + ((Transaction)data).getId(), recent.add((Transaction) data));
+		this.onProgress.accept(0);
+		this.onSuccess = data -> sendResponse.accept(WITHDRAWAL_OK + TRANSACTION + ((Transaction)data).getId(), recent.add((Transaction) data));
 		this.post(builder.makeWithdrawal(), Transaction.class);
 	}
 
 	public synchronized void deleteAccount()  throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
-		this.onSuccess = data -> sendResponse.accept(String.valueOf(data) , null);
+		this.onProgress.accept(0);
+		this.onSuccess = data -> sendResponse.accept("\n" + String.valueOf(data) , null);
 		this.delete(builder.deleteAccount((Long)data), String.class);
 	}
 	
-	public void getAccountsBalance()  throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
-		this.onSuccess = data -> sendResponse.accept("current balance: " + String.valueOf(data) , null);
+	public synchronized void getAccountsBalance()  throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
+		this.onProgress.accept(0);
+		this.onSuccess = data -> sendResponse.accept(GET_BALANCE_OK + String.valueOf(data) , null);
 		this.get(builder.getBalance((Long)data), Double.class);
 	}
 	
 	public synchronized void externalOperation() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
-		this.onSuccess = data -> sendResponse.accept("operation successful!, transaction id: " + String.valueOf(data) , null);
+		this.onProgress.accept(0);
+		this.onSuccess = data -> sendResponse.accept(EXTERNAL_OK + TRANSACTION + String.valueOf(data) , null);
 		this.post(builder.externalDebitsNChecks(), Long.class);
 	}
 

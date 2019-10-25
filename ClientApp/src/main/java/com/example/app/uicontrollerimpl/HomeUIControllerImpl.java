@@ -22,27 +22,37 @@ public class HomeUIControllerImpl extends AbstractUIController implements HomeUI
 		
 	private BiConsumer<String, Account> sendResponse;
 	
+	private final String OPEN_ACCOUNT_OK = "\nAccount opened!";
+		
+	public void run() {}
+	
+	public synchronized HomeUIController setOnProgress(Consumer<Integer> consumer) {
+		this.onProgress = consumer;
+		return this;
+	}
+	
 	@Override
-	public HomeUIController setData(Object data) {
+	public synchronized HomeUIController setData(Object data) {
 		this.data = data;
 		return this;
 	}
 
 	@Override
-	public HomeUIController setOnSuccess(BiConsumer<String, Account> consumer) {
+	public synchronized HomeUIController setOnSuccess(BiConsumer<String, Account> consumer) {
 		this.sendResponse = consumer;
 		return this;
 	}
 
 	@Override
-	public HomeUIController setOnError(Consumer<RequestError> consumer) {
+	public synchronized HomeUIController setOnError(Consumer<RequestError> consumer) {
 		this.onError = consumer;
 		return this;
 	}
 	
 	@Override
-	public void openAccount() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
-		this.onSuccess = data -> this.sendResponse.accept("Account opened!", (Account)data);
+	public synchronized void openAccount() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
+		this.onProgress.accept(0);
+		this.onSuccess = data -> this.sendResponse.accept(OPEN_ACCOUNT_OK, (Account)data);
 		this.post(builder.createAccount(), Account.class);
 	}
 

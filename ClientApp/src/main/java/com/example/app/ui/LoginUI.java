@@ -1,68 +1,43 @@
 package com.example.app.ui;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.example.app.exceptions.AttemptsExceededException;
 import com.example.app.exceptions.MalformedRequestException;
 import com.example.app.model.Account;
 import com.example.app.model.Credentials;
 import com.example.app.uicontroller.LoginUIController;
+import com.example.app.util.AbstractUI;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class LoginUI {
+public class LoginUI extends AbstractUI {
 	
 	@Autowired
 	private LoginUIController uiController;
 	
-	@Autowired
-	private BufferedReader reader;
-	
 	private Account active;
-	
-	@Autowired
-	private AnnotationConfigApplicationContext context;
+	private int attempts;
 		 
 	private final String LOGIN_SECTION = "Authenticating user";
 	private final String PROMPT_ACCOUNT_NUM = "\nAccount Number: ";
 	private final String PROMPT_PIN = "\nPIN: ";
-	private final String READ_ERROR = "Input Error, please try again";
-	private final String ENTRY_ERROR = "invalid entry, it's not a number\n";
 	private final String ERROR_ATTEMPTS_EXCEEDED = "attempts exceeded(3), operation canceled";
-
-	private boolean responseRecived;
-	private int attempts;
 		
-	public Account authenticate()  throws MalformedRequestException, IOException, AttemptsExceededException {
+	public Account start()  throws MalformedRequestException, IOException, AttemptsExceededException {
 		Credentials credentials = context.getBean(Credentials.class);
 	    attempts = 0;
 		
 		do {
 			try {
-				responseRecived = false;
 				System.out.println(LOGIN_SECTION);
 				System.out.println(PROMPT_ACCOUNT_NUM);
 				credentials.setAccountNumber(Long.parseLong(reader.readLine()));
 				System.out.println(PROMPT_PIN);
 				credentials.setPin(Integer.parseInt(reader.readLine()));
-				uiController.setData(credentials)
-							.setOnSuccess( (response, data) -> {
-								attempts = 5;
-								this.active = data;
-								System.out.println(response);
-								responseRecived = true;
-
-							})
-							.setOnError(error -> {
-								System.out.println(error.getMessage());
-								attempts++;
-								responseRecived = true;
-
-							})
-							.authenticate();
-				while(!responseRecived) { System.out.println();}
+				authenticate(credentials);
 			} catch(IOException e) {
 				System.err.println(READ_ERROR);
 				attempts++;
@@ -77,4 +52,23 @@ public class LoginUI {
 			return active;
 		}
 	}
+	
+	private void authenticate(Credentials credentials) throws UnsupportedEncodingException, JsonProcessingException, MalformedRequestException, IOException {
+		uiController.setData(credentials)
+		.setOnSuccess( (response, data) -> {
+			attempts = 5;
+			this.active = data;
+			System.out.println(response);
+
+		})
+		.setOnError(error -> {
+			System.out.println(error.getMessage());
+			attempts++;
+		})
+		.setOnProgress(progress -> this.progress = progress)
+		.authenticate();
+		
+		this.waitingResponse();
+	}
+
 }

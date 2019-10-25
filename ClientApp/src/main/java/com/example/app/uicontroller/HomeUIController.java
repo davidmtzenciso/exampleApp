@@ -10,13 +10,15 @@ import com.example.app.model.Account;
 import com.example.app.model.RequestError;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public interface HomeUIController {
-
+public interface HomeUIController extends Runnable {
+	
 	public HomeUIController setData(Object data);
 	
 	public HomeUIController setOnSuccess(BiConsumer<String, Account> consumer);
 	
 	public HomeUIController setOnError(Consumer<RequestError> consumer);
+	
+	public HomeUIController setOnProgress(Consumer<Integer> consumer);
 	
 	public void openAccount() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException;
 	
