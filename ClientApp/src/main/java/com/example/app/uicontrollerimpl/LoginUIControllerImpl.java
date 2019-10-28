@@ -53,7 +53,7 @@ public class LoginUIControllerImpl extends AbstractUIController implements Login
 	public synchronized void authenticate() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
 		this.onProgress.accept(0);
 		this.onSuccess = data -> sendResponse.accept(LOGIN_OK, (Account) data);
-		this.post(builder.authentication(), Account.class);
+		this.post(builder.postCredentials(), Account.class);
 	}
 	
 }

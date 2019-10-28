@@ -62,13 +62,13 @@ public class OperationsUIControllerImpl extends AbstractUIController implements 
 	public synchronized void makeDeposit()  throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
 		this.onProgress.accept(0);
 		this.onSuccess = data -> sendResponse.accept(DEPOSIT_OK + TRANSACTION + ((Transaction)data).getId(), recent.add((Transaction) data));
-		this.post(builder.makeDeposit(), Transaction.class);
+		this.post(builder.postDeposit(), Transaction.class);
 	}
 	
 	public synchronized void makeWithdrawal()  throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
 		this.onProgress.accept(0);
 		this.onSuccess = data -> sendResponse.accept(WITHDRAWAL_OK + TRANSACTION + ((Transaction)data).getId(), recent.add((Transaction) data));
-		this.post(builder.makeWithdrawal(), Transaction.class);
+		this.post(builder.postWithdrawal(), Transaction.class);
 	}
 
 	public synchronized void deleteAccount()  throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
@@ -86,7 +86,7 @@ public class OperationsUIControllerImpl extends AbstractUIController implements 
 	public synchronized void externalOperation() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
 		this.onProgress.accept(0);
 		this.onSuccess = data -> sendResponse.accept(EXTERNAL_OK + TRANSACTION + String.valueOf(data) , null);
-		this.post(builder.externalDebitsNChecks(), Long.class);
+		this.post(builder.postExternalDebitsNChecks(), Long.class);
 	}
 
 }

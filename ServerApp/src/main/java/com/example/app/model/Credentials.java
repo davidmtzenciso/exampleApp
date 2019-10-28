@@ -2,11 +2,13 @@ package com.example.app.model;
 
 import java.io.Serializable;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Component
+@Scope("request")
 public class Credentials implements Serializable  {
 
 	private Long accountNumber;

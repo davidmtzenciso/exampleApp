@@ -53,7 +53,7 @@ public class HomeUIControllerImpl extends AbstractUIController implements HomeUI
 	public synchronized void openAccount() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
 		this.onProgress.accept(0);
 		this.onSuccess = data -> this.sendResponse.accept(OPEN_ACCOUNT_OK, (Account)data);
-		this.post(builder.createAccount(), Account.class);
+		this.post(builder.postAccount(), Account.class);
 	}
 
 }

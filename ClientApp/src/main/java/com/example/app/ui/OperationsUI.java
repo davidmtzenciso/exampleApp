@@ -25,7 +25,7 @@ public class OperationsUI  extends AbstractUI {
 	private final String MENU_OPERATIONS = "\n1-.Make Deposit\n2-.Withdraw funds\n3-.Account's Balance\n4-.External Operation\n5-.Close Account\n6-.Exit\nOperation: ";
 	private final String OPERATIONS_SECTION = "You can manipulate your account";
 	private final String PROMPT_AMOUNT = "Amount: (required): ";
-	private final String PROMPT_DESCRIPTION = "Description(optional): ";
+	private final String PROMPT_DESCRIPTION = "Description (optional): ";
 	private final int MAKE_DEPOSIT = 1;
 	private final int WITHDRAWAL = 2;
 	private final int GET_BALANCE = 3;
@@ -43,20 +43,15 @@ public class OperationsUI  extends AbstractUI {
 				System.out.println(MENU_OPERATIONS);
 				option = Integer.parseInt(reader.readLine());
 				switch(option) {
-					case MAKE_DEPOSIT:
-						this.makeDeposit(active);
+					case MAKE_DEPOSIT: this.makeDeposit(active);
 						break;
-					case WITHDRAWAL:
-						this.makeWithdrawal(active);
+					case WITHDRAWAL: this.makeWithdrawal(active);
 						break;
-					case GET_BALANCE:
-						this.getBalance(active);
+					case GET_BALANCE: this.getBalance(active);
 						break;
-					case EXTERNAL_OP:
-						externalOperation(active);
+					case EXTERNAL_OP: this.externalOperation(active);
 						break;
-					case CLOSE_ACCOUNT:
-						closeAccount(active);
+					case CLOSE_ACCOUNT: this.closeAccount(active);
 						break;
 					case EXIT:
 						break;
@@ -71,7 +66,7 @@ public class OperationsUI  extends AbstractUI {
 			} catch (IOException e) {
 				System.err.println(READ_ERROR);
 			} catch (MalformedRequestException e) {
-				e.printStackTrace();
+				System.err.println(e.getMessage());
 			}
 		} while(option != EXIT);
 	}

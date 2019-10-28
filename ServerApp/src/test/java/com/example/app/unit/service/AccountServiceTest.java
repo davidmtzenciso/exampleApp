@@ -126,13 +126,13 @@ public class AccountServiceTest implements DataInitialization  {
 	public void testFindByIdAndPinExistent() throws AccountNotFoundException {		
 		when(accountRepositoryMock.findByIdAndPin(Mockito.anyLong(), Mockito.anyInt())).thenReturn(this.account);
 		when(transactionRepositoryMock.findByAccount(Mockito.any(Account.class), Mockito.any(Pageable.class))).thenReturn(Page.empty());
-		Assert.assertNotNull(this.service.getAccountbyIdNPin(new Long(1), 1234));
+		Assert.assertNotNull(this.service.getAccountByIdNPin(new Long(1), 1234));
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testFindByIdAndPinNonExistent() throws AccountNotFoundException {
 		when(accountRepositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(null);
-		this.service.getAccountbyIdNPin(new Long(1), 1234);
+		this.service.getAccountByIdNPin(new Long(1), 1234);
 	}
 
 	// 		 MAKE DEPOSIT TESTS

@@ -55,18 +55,18 @@ public class LoginUI extends AbstractUI {
 	
 	private void authenticate(Credentials credentials) throws UnsupportedEncodingException, JsonProcessingException, MalformedRequestException, IOException {
 		uiController.setData(credentials)
-		.setOnSuccess( (response, data) -> {
-			attempts = 5;
-			this.active = data;
-			System.out.println(response);
-
-		})
-		.setOnError(error -> {
-			System.out.println(error.getMessage());
-			attempts++;
-		})
-		.setOnProgress(progress -> this.progress = progress)
-		.authenticate();
+					.setOnSuccess( (response, data) -> {
+						attempts = 5;
+						this.active = data;
+						System.out.println(response);
+			
+					})
+					.setOnError(error -> {
+						System.out.println(error.getMessage());
+						attempts++;
+					})
+					.setOnProgress(progress -> this.progress = progress)
+					.authenticate();
 		
 		this.waitingResponse();
 	}

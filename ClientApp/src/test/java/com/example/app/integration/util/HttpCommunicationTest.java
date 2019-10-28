@@ -79,7 +79,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		
 		if(!info.getTags().contains(SKIP_BEFORE)) {
 			LOG.info("executing before...");
-			client = this.post(builder.createAccount(), 
+			client = this.post(builder.postAccount(), 
 					mapper.writeValueAsString(account), 
 					response -> {
 						if(response.getStatusLine().getStatusCode() == 200) {
@@ -145,7 +145,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 	public void testCreateAccount(TestInfo info) throws IOException, InterruptedException {
 		LOG.info(info.getDisplayName());
 		
-		CloseableHttpAsyncClient client = this.post(builder.createAccount(), 
+		CloseableHttpAsyncClient client = this.post(builder.postAccount(), 
 					mapper.writeValueAsString(account), 
 					response -> {
 						status = response.getStatusLine().getStatusCode();
@@ -210,7 +210,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		credentials.setAccountNumber(this.accountSaved.getId());
 		credentials.setPin(this.accountSaved.getPin());
 		
-		CloseableHttpAsyncClient client =  this.post(builder.authentication(), 
+		CloseableHttpAsyncClient client =  this.post(builder.postCredentials(), 
 					mapper.writeValueAsString(credentials), 
 					response -> {
 						status = response.getStatusLine().getStatusCode();
@@ -282,7 +282,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		this.transaction.getAccount().setId(this.accountSaved.getId());
 		
 		CloseableHttpAsyncClient client = 
-				this.post(builder.makeDeposit(), 
+				this.post(builder.postDeposit(), 
 					mapper.writeValueAsString(transaction), 
 					response -> {
 						try {
@@ -314,7 +314,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		this.transaction.getAccount().setId(this.accountSaved.getId());
 		
 		CloseableHttpAsyncClient client = 
-				this.post(builder.makeWithdrawal(), 
+				this.post(builder.postWithdrawal(), 
 					mapper.writeValueAsString(transaction) , 
 					response -> {
 						try {
@@ -346,7 +346,7 @@ public class HttpCommunicationTest extends HttpCommunication implements DataInit
 		this.transaction.getAccount().setId(this.accountSaved.getId());
 		
 		CloseableHttpAsyncClient client = 
-				this.post(builder.externalDebitsNChecks(), 
+				this.post(builder.postExternalDebitsNChecks(), 
 					mapper.writeValueAsString(transaction) , 
 					response -> {
 						try {

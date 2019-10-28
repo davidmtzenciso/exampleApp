@@ -11,7 +11,7 @@ public interface AccountService {
 	
 	public Account save(Account entity) throws FailedEntityValidationException;
 	
-	public Account getAccountbyIdNPin(Long accountNum, Integer pin) throws AccountNotFoundException;
+	public Account getAccountByIdNPin(Long accountNum, Integer pin) throws AccountNotFoundException;
 	
 	public Transaction makeDeposit(Transaction transaction) throws AccountNotFoundException, FailedEntityValidationException;
 		

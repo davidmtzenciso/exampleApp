@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.example.app.exceptions.AttemptsExceededException;
 import com.example.app.exceptions.MalformedRequestException;
@@ -20,6 +21,9 @@ public class HomeUI extends AbstractUI {
 	
 	@Autowired
 	private OperationsUI operationsUI;
+	
+	@Autowired
+	AnnotationConfigApplicationContext context;
 	
 	@Autowired
 	private HomeUIController uiController;
@@ -95,7 +99,7 @@ public class HomeUI extends AbstractUI {
 	}
 	
 	private Account createAccount(BufferedReader reader) throws IOException, AttemptsExceededException {
-		Account account = new Account();
+		Account account = context.getBean(Account.class);
 		String balance;
 		
 		try {

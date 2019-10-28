@@ -16,10 +16,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractUIController extends HttpCommunication {
-	
-	protected static final String HEADER = "Content-Type";
-	protected static final String VALUE = "application/json; charset=utf-8";
-	protected static final String INTERNAL_ERROR = "\nError del sistema, vuelvalo a intentar";
+
+	protected static final String INTERNAL_ERROR = "\nSystem error, please try again";
 	protected static final String SERVER_ERROR = "\nError with server communication, please try again";
 	private final String MALFORMED_REQUEST = "set data and callbacks to handle request";
 	
