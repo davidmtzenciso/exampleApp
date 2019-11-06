@@ -22,7 +22,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @Component
 @Scope("request")
 @Entity
@@ -62,7 +61,7 @@ public class Transaction implements Serializable {
 	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 	
-	
+	public Transaction() {}
 
 	public Transaction(Long id, Date date, Integer type, Double amount, String description, Account account) {
 		this.id = id;

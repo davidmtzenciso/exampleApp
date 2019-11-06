@@ -1,7 +1,5 @@
 package com.example.app.unit.repository;
 
-
-
 import java.util.NoSuchElementException;
 
 import org.junit.Assert;
@@ -64,19 +62,34 @@ public class AccountRepositoryTest implements DataInitialization {
 	//		FIND BY ID AND PIN TESTS
 	
 	@Test
-	public void testFindByIdAndPinExisting() {
+	public void testFindByIdAndPinWithCorrectIdAndIncorrectPin() {
 		this.saved = this.repository.save(this.newAccount);
-		Assert.assertNotNull(this.repository.findByIdAndPin(this.saved.getId(), this.saved.getPin()));
+		Assert.assertFalse(this.repository.findByIdAndPin(this.saved.getId(), 1111).isPresent());
+	}
+	
+	@Test
+	public void testFindByIdAndPinWithIncorrectIdAndCorrentPin() {
+		this.saved = this.repository.save(this.newAccount);
+		Assert.assertFalse(this.repository.findByIdAndPin(new Long(1231432), this.saved.getPin()).isPresent());
+	}
+	
+	@Test
+	public void testFindByIdAndPinWithIncorrectIdAndPin() {
+		Assert.assertFalse(this.repository.findByIdAndPin(new Long(1231432), 1111).isPresent());
+	}
+	
+	@Test
+	public void testFindByIdAndPinWithCorrectIdAndPin() {
+		this.saved = this.repository.save(this.newAccount);
+		Assert.assertFalse(this.repository.findByIdAndPin(this.saved.getId(), this.saved.getPin()).isPresent());
 	}
 	
 	//		FIND AND LOCK BY ID
 	
-	@Test
-	public void testFindAndLockByIdWithUnlocked() {
-		this.saved = this.repository.save(this.newAccount);
-		this.repository.findAndLockById(this.saved.getId()).get();
+	@Test(expected = NoSuchElementException.class)
+	public void testFindAndLockByIdWithIncorrectId() {
+		Assert.assertTrue(this.repository.findAndLockById(new Long(112312312)).isPresent());
 	}
-	
 	
 	@Test(expected = NoSuchElementException.class)
 	public void testFindAndLockByIdWithlocked() {
@@ -84,24 +97,23 @@ public class AccountRepositoryTest implements DataInitialization {
 		this.repository.findAndLockById(this.saved.getId()).get();
 	}
 	
-	@Test(expected = NoSuchElementException.class)
-	public void testFindAndLockByIdNonExistent() {
-		this.repository.findAndLockById(new Long(112312312)).get();
+	@Test
+	public void testFindAndLockByIdWithCorrectIdAndUnlocked() {
+		this.saved = this.repository.save(this.newAccount);
+		Assert.assertTrue(this.repository.findAndLockById(this.saved.getId()).isPresent());
 	}
 	
 	// 		DELETE ACCOUNT TESTS
 	
 	@Test(expected = EmptyResultDataAccessException.class)
-	public void testDeleteNonExisting() {
+	public void testDeleteWithIncorrectId() {
 		this.repository.deleteById(new Long(1234233123));
 	}
 	
 	@Test
-	public void testDeleteExisting() {
+	public void testDeleteWithCorrectId() {
 		this.saved = this.repository.save(this.newAccount);
 		this.repository.deleteById(this.saved.getId());
 	}
-	
-	
 	
 }

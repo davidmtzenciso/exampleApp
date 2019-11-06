@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import com.example.app.exception.FailedEntityValidationException;
 import com.example.app.exception.TransactionsNotFoundException;
@@ -17,6 +18,7 @@ import com.example.app.model.Transaction;
 import com.example.app.repository.TransactionRepository;
 import com.example.app.service.TransactionService;
 
+@Service
 public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired

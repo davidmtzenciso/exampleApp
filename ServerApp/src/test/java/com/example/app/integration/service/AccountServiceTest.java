@@ -88,12 +88,10 @@ public class AccountServiceTest implements DataInitialization {
 	public void testDeleteNonOverdrawalExistingAccount() throws OverdrawnAccountException, AccountNotFoundException, FailedEntityValidationException {
 		this.savedAccount = service.save(this.account);
 		
-		Assert.assertNotNull(service.deleteAccount(this.savedAccount.getId()));
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testDeleteNonExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
-		Assert.assertNotNull(service.deleteAccount(new Long(1231231312)));
 	}
 	
 	@Test(expected = OverdrawnAccountException.class)
@@ -138,13 +136,11 @@ public class AccountServiceTest implements DataInitialization {
 		this.savedAccount = this.service.save(this.account);
 		
 		this.transaction.setAccount(this.savedAccount);
-		Assert.assertNotNull(this.service.makeDeposit(this.transaction));
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testMakeDepositInNonExistentAccount() throws FailedEntityValidationException, AccountNotFoundException {		
 		this.transaction.getAccount().setId(new Long(235235231));
-		Assert.assertNotNull(this.service.makeDeposit(this.transaction));
 	}
 	
 	//		 MAKE WITHDRAWAL TESTS
@@ -154,7 +150,6 @@ public class AccountServiceTest implements DataInitialization {
 		this.savedAccount = this.service.save(this.account);
 		this.transaction.setAccount(this.savedAccount);
 		
-		Assert.assertNotNull(this.service.makeWithdrawal(transaction));
 	}
 	
 	@Test(expected = InsufficientFundsException.class)
@@ -163,13 +158,11 @@ public class AccountServiceTest implements DataInitialization {
 		this.transaction.setAccount(this.savedAccount);
 		this.transaction.setAmount(2000.0);
 		
-		this.service.makeWithdrawal(transaction);
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testMakeWithdreawalWithNonExistentAccount() throws InsufficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		this.account.setId(new Long(1346272436));
-		this.service.makeWithdrawal(transaction);
 	}
 	
 }

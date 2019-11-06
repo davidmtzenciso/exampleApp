@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.example.app.conf.DataInitialization;
 import com.example.app.exception.AccountNotFoundException;
 import com.example.app.exception.FailedEntityValidationException;
 import com.example.app.exception.InsufficientFundsException;
@@ -19,17 +20,18 @@ import com.example.app.repository.TransactionRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TransactionServiceTest {
+public class TransactionServiceTest implements DataInitialization {
 
 	@MockBean
 	private TransactionRepository transactionRepositoryMock;
 	
 	@Autowired
 	private Transaction transaction;
+
 	
 	@Before
 	public void init() {
-		this.transaction = this.initialize(this.transaction, this.account);
+		this.transaction = this.initialize(transaction, null);
 
 	}
 	

@@ -29,8 +29,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.example.app.conf.DataInitialization;
 import com.example.app.exception.AccountNotFoundException;
 import com.example.app.exception.FailedEntityValidationException;
-import com.example.app.exception.InsufficientFundsException;
-import com.example.app.exception.OverdrawnAccountException;
 import com.example.app.model.Account;
 import com.example.app.model.Credentials;
 import com.example.app.model.Transaction;
@@ -48,6 +46,9 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	@MockBean
 	private AccountService accountServiceMock;
+	
+	@MockBean
+	private AccountService transactionServiceMock;
 	 
 	@Autowired
  	private ObjectMapper mapper;
@@ -152,7 +153,6 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testDeleteNonExistingAccountWithParam() throws Exception {
-		 when(accountServiceMock.deleteAccount((Mockito.anyLong()))).thenThrow(AccountNotFoundException.class);
 		 
 		 mockMvc.perform(delete(HOST + API_VERSION + URI_MODULE + "?id=1")
 			 		.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -162,7 +162,6 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testDeleteOverdrawnAccountWithParam() throws Exception {
-		 when(accountServiceMock.deleteAccount(Mockito.anyLong())).thenThrow(OverdrawnAccountException.class);
 		 
 		 mockMvc.perform(delete(HOST + API_VERSION + URI_MODULE + "?id=1")
 			 		.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -172,7 +171,6 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testDeleteExistingAccountWithParam() throws JsonProcessingException, Exception {
-		 when(accountServiceMock.deleteAccount(Mockito.anyLong())).thenReturn("deleted");
 		 
 		 mockMvc.perform(delete(HOST + API_VERSION + URI_MODULE + "?id=1")
 			 		.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -302,7 +300,6 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testDepositToNonExistentAccount() throws JsonProcessingException, Exception {
-		 when(accountServiceMock.makeDeposit(Mockito.any(Transaction.class))).thenThrow(AccountNotFoundException.class);
 		 
 		 mockMvc.perform(post(HOST + API_VERSION + URI_MODULE + URI_MAKE_DEPOSIT)
 			 		.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -313,7 +310,6 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testCorrectDeposit() throws JsonProcessingException, Exception {
-		 when(accountServiceMock.makeDeposit(Mockito.any(Transaction.class))).thenReturn(this.transaction);
 		 
 		 mockMvc.perform(post(HOST + API_VERSION + URI_MODULE + URI_MAKE_DEPOSIT)
 			 		.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -345,7 +341,6 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testMakeWithdrawalWithInsuficientFunds() throws JsonProcessingException, Exception {
-		 when(accountServiceMock.makeWithdrawal(Mockito.any(Transaction.class))).thenThrow(InsufficientFundsException.class);
 
 		 mockMvc.perform(post(HOST + API_VERSION + URI_MODULE + URI_MAKE_WITHDRAWAL)
 			 		.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -356,7 +351,6 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testMakeWithdrawalToNonExistentAccount() throws JsonProcessingException, Exception {
-		 when(accountServiceMock.makeWithdrawal(Mockito.any(Transaction.class))).thenThrow(AccountNotFoundException.class);
 
 		 mockMvc.perform(post(HOST + API_VERSION + URI_MODULE + URI_MAKE_WITHDRAWAL)
 			 		.contentType(MediaType.APPLICATION_JSON_UTF8)
