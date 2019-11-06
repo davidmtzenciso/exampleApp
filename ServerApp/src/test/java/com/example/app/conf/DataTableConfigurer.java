@@ -27,7 +27,7 @@ public class DataTableConfigurer implements TypeRegistryConfigurer {
 			public Account transform(Map<String, String> entry) throws Throwable {
 				 return new Account(entry.get("id").isEmpty() ? null : Long.parseLong(entry.get("id")), 
 						 			Integer.parseInt(entry.get ("pin")),entry.get("firstName"), entry.get("lastName"), 
-						 			entry.get("accountHoldersId"), Double.parseDouble(entry.get("balance")));
+						 			entry.get("accountHoldersId"), Double.parseDouble(entry.get("balance")), null);
 			}
 		}));
 		

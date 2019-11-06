@@ -2,6 +2,8 @@ package com.example.app.unit.repository;
 
 
 
+import java.util.NoSuchElementException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,22 +74,19 @@ public class AccountRepositoryTest implements DataInitialization {
 	@Test
 	public void testFindAndLockByIdWithUnlocked() {
 		this.saved = this.repository.save(this.newAccount);
-		Account lockedAccount = this.repository.findAndLockById(this.saved.getId());
-		Assert.assertNotNull(lockedAccount);
+		this.repository.findAndLockById(this.saved.getId()).get();
 	}
 	
 	
-	@Test
+	@Test(expected = NoSuchElementException.class)
 	public void testFindAndLockByIdWithlocked() {
 		this.saved = this.repository.save(this.newAccount);
-		Account lockedAccount = this.repository.findAndLockById(this.saved.getId());
-		Assert.assertNotNull(lockedAccount);
+		this.repository.findAndLockById(this.saved.getId()).get();
 	}
 	
-	@Test
+	@Test(expected = NoSuchElementException.class)
 	public void testFindAndLockByIdNonExistent() {
-		Account lockedAccount = this.repository.findAndLockById(new Long(112312312));
-		Assert.assertNull(lockedAccount);
+		this.repository.findAndLockById(new Long(112312312)).get();
 	}
 	
 	// 		DELETE ACCOUNT TESTS

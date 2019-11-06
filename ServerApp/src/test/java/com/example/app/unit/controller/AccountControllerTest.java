@@ -29,7 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.example.app.conf.DataInitialization;
 import com.example.app.exception.AccountNotFoundException;
 import com.example.app.exception.FailedEntityValidationException;
-import com.example.app.exception.InsuficientFundsException;
+import com.example.app.exception.InsufficientFundsException;
 import com.example.app.exception.OverdrawnAccountException;
 import com.example.app.model.Account;
 import com.example.app.model.Credentials;
@@ -345,7 +345,7 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testMakeWithdrawalWithInsuficientFunds() throws JsonProcessingException, Exception {
-		 when(accountServiceMock.makeWithdrawal(Mockito.any(Transaction.class))).thenThrow(InsuficientFundsException.class);
+		 when(accountServiceMock.makeWithdrawal(Mockito.any(Transaction.class))).thenThrow(InsufficientFundsException.class);
 
 		 mockMvc.perform(post(HOST + API_VERSION + URI_MODULE + URI_MAKE_WITHDRAWAL)
 			 		.contentType(MediaType.APPLICATION_JSON_UTF8)

@@ -15,19 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.app.conf.DataInitialization;
 import com.example.app.exception.AccountNotFoundException;
 import com.example.app.exception.FailedEntityValidationException;
-import com.example.app.exception.InsuficientFundsException;
 import com.example.app.exception.OverdrawnAccountException;
 import com.example.app.model.Account;
-import com.example.app.model.Transaction;
 import com.example.app.repository.AccountRepository;
-import com.example.app.repository.TransactionRepository;
 import com.example.app.service.AccountService;
 
 @RunWith(SpringRunner.class)
@@ -37,24 +32,17 @@ public class AccountServiceTest implements DataInitialization  {
 	@MockBean
 	private AccountRepository accountRepositoryMock;
 	
-	@MockBean
-	private TransactionRepository transactionRepositoryMock;
-	
 	@Autowired
 	private AccountService service;
 	
 	@Autowired
 	private Account account;
 	
-	@Autowired
-	private Transaction transaction;
-	
 	private Account savedAccount;
 	
 	@Before
 	public void init() {
 		this.account = this.initialize(this.account);
-		this.transaction = this.initialize(this.transaction, this.account);
 	}
 	
 	// 		SAVE ACCOUNT TEST
@@ -88,20 +76,20 @@ public class AccountServiceTest implements DataInitialization  {
 	
 	@Test
 	public void testDeleteNonOverdrawnExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
+		when(accountRepositoryMock.findAndLockById(new Long(1)).get()).thenReturn(this.account);
 		this.service.deleteAccount(new Long(1));
 	}
 	
 	@Test(expected = OverdrawnAccountException.class)
 	public void testDeleteOverdrawnExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
 		this.account.setBalance(-10.0);
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
+		when(accountRepositoryMock.findAndLockById(Mockito.anyLong()).get()).thenReturn(this.account);
 		this.service.deleteAccount(new Long(1));
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testDeleteNonExistingAccount() throws OverdrawnAccountException, AccountNotFoundException {
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
+		when(accountRepositoryMock.findAndLockById(Mockito.anyLong())).thenReturn(null);
 		this.service.deleteAccount(new Long(1));
 	}
 	
@@ -109,14 +97,14 @@ public class AccountServiceTest implements DataInitialization  {
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testGetBalanceOfNonExistingAccount() throws AccountNotFoundException {
-		when(accountRepositoryMock.findById(new Long(1))).thenThrow(NoSuchElementException.class);
+		when(accountRepositoryMock.findById(Mockito.anyLong())).thenThrow(NoSuchElementException.class);
 		this.service.getBalance(new Long(1));
 	}
 	
 	@Test
 	public void testgetBalanceOfExistingAccount() throws AccountNotFoundException {
-		when(accountRepositoryMock.findById(new Long(1))).thenReturn(Optional.of(this.account));
-		Assert.assertNotNull(this.service.getBalance(new Long(1)));
+		when(accountRepositoryMock.findById(Mockito.anyLong())).thenReturn(Optional.of(this.account));
+		Assert.assertNotNull(this.service.getBalance(Mockito.anyLong()));
 	}
 	
 	
@@ -124,59 +112,14 @@ public class AccountServiceTest implements DataInitialization  {
 	
 	@Test
 	public void testFindByIdAndPinExistent() throws AccountNotFoundException {		
-		when(accountRepositoryMock.findByIdAndPin(Mockito.anyLong(), Mockito.anyInt())).thenReturn(this.account);
-		when(transactionRepositoryMock.findByAccount(Mockito.any(Account.class), Mockito.any(Pageable.class))).thenReturn(Page.empty());
-		Assert.assertNotNull(this.service.getAccountbyIdNPin(new Long(1), 1234));
+		when(accountRepositoryMock.findByIdAndPin(Mockito.anyLong(), Mockito.anyInt()).get()).thenReturn(this.account);
+		Assert.assertNotNull(this.service.getAccountbyIdNPin(Mockito.anyLong(), Mockito.anyInt()));
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testFindByIdAndPinNonExistent() throws AccountNotFoundException {
-		when(accountRepositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(null);
+		when(accountRepositoryMock.findByIdAndPin(Mockito.anyLong(), Mockito.anyInt()).get()).thenThrow(AccountNotFoundException.class);
 		this.service.getAccountbyIdNPin(new Long(1), 1234);
 	}
 
-	// 		 MAKE DEPOSIT TESTS
-	
-	@Test(expected = AccountNotFoundException.class)
-	public void testMakeDepositInNonExistentAccount() throws AccountNotFoundException, FailedEntityValidationException {
-		transaction.getAccount().setId(new Long(1));
-		
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
-		service.makeDeposit(this.transaction);
-	}
-	
-	@Test
-	public void testMakeDepositInExistingAccount() throws AccountNotFoundException, FailedEntityValidationException {
-		transaction.getAccount().setId(new Long(1));
-		
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
-		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
-		Assert.assertNotNull(service.makeDeposit(transaction));
-	}
-		
-	//		 MAKE WITHDRAWAL TESTS
-	
-	@Test
-	public void testMakeWithdrawalWithCorrectAmount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
-		this.account.setId(new Long(1));
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
-		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
-		Assert.assertNotNull(service.makeWithdrawal(this.transaction));
-	}
-	
-	@Test(expected = InsuficientFundsException.class)
-	public void testMakeWithdrawalWithIncorrectAmount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
-		this.account.setId(new Long(1));
-		this.transaction.setAmount(2000.0);
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(this.account);
-		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
-		this.service.makeWithdrawal(this.transaction);
-	}
-	
-	@Test(expected = AccountNotFoundException.class)
-	public void testMakeWithdrawalWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
-		when(accountRepositoryMock.findAndLockById(new Long(1))).thenReturn(null);
-		when(transactionRepositoryMock.save(this.transaction)).thenReturn(this.transaction);
-		this.service.makeWithdrawal(this.transaction);
-	}
 }

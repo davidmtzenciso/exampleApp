@@ -13,6 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -23,6 +27,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Component
 @Scope("prototype")
@@ -35,18 +42,26 @@ public class Account implements Serializable {
 	@Column(name="account_id", insertable=false, updatable=false, nullable=false)
 	private Long id;
 	
+	@Min(message= "unable to process, pin cannot be 0 or below", value = 1)
+	@NotNull(message="unable to process, no pin number was provided")
 	@Column(nullable=false)
 	private Integer pin;
 		
+	@NotEmpty(message = "Please provide a first name")
+	@NotNull(message = "Please provide a first name")
 	@Column(name="first_name", nullable=false, length=40)
 	private String firstName;
 	
+	@NotEmpty(message = "Please provide a last name")
+	@NotNull(message = "Please provide a last name")
 	@Column(name="last_name", nullable=false, length=60)
 	private String lastName;
-	
-	@Column(name="account_holders_id", nullable=false)
+
+	@Size(message="unable to process, account's holder id its too long", max=10)
+	@Column(name="account_holders_id", nullable=false, length=10)
 	private String accountHoldersId;
-	
+
+	@Min(message="unable to process, balance cannot have a negative value", value=0)
 	@Column(nullable=false)
 	private Double balance;
 	
@@ -58,16 +73,17 @@ public class Account implements Serializable {
 	
 	@JsonIgnore
 	private static final long serialVersionUID = -1051181485163125999L;
-		
-	public Account() {}
-
-	public Account(Long id, Integer pin, String firstName, String lastName, String accountHoldersId, Double balance) {
+	
+	public Account( ) {}
+	
+	public Account(Long id, Integer pin, String firstName, String lastName, String accountHoldersId, Double balance, List<Transaction> transactions) {
 		this.id = id;
 		this.pin = pin;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.accountHoldersId = accountHoldersId;
 		this.balance = balance;
+		this.transactions = transactions;
 	}
 
 	public Long getId() {
@@ -125,4 +141,6 @@ public class Account implements Serializable {
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}
+	
+	
 }

@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.example.app.conf.DataInitialization;
 import com.example.app.exception.AccountNotFoundException;
 import com.example.app.exception.FailedEntityValidationException;
-import com.example.app.exception.InsuficientFundsException;
+import com.example.app.exception.InsufficientFundsException;
 import com.example.app.exception.OverdrawnAccountException;
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
@@ -150,15 +150,15 @@ public class AccountServiceTest implements DataInitialization {
 	//		 MAKE WITHDRAWAL TESTS
 	
 	@Test
-	public void testMakewithdrawalCorrectAmount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
+	public void testMakewithdrawalCorrectAmount() throws InsufficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		this.savedAccount = this.service.save(this.account);
 		this.transaction.setAccount(this.savedAccount);
 		
 		Assert.assertNotNull(this.service.makeWithdrawal(transaction));
 	}
 	
-	@Test(expected = InsuficientFundsException.class)
-	public void testMakeWithdrawalIncorrectAmount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
+	@Test(expected = InsufficientFundsException.class)
+	public void testMakeWithdrawalIncorrectAmount() throws InsufficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		this.savedAccount = this.service.save(this.account);
 		this.transaction.setAccount(this.savedAccount);
 		this.transaction.setAmount(2000.0);
@@ -167,7 +167,7 @@ public class AccountServiceTest implements DataInitialization {
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
-	public void testMakeWithdreawalWithNonExistentAccount() throws InsuficientFundsException, AccountNotFoundException, FailedEntityValidationException {
+	public void testMakeWithdreawalWithNonExistentAccount() throws InsufficientFundsException, AccountNotFoundException, FailedEntityValidationException {
 		this.account.setId(new Long(1346272436));
 		this.service.makeWithdrawal(transaction);
 	}

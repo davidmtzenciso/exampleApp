@@ -1,10 +1,14 @@
 package com.example.app.model;
 
-
 import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -12,14 +16,15 @@ import org.springframework.stereotype.Component;
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 @Component
-@Scope("prototype")
+@Scope("request")
 @Entity
 @Table(name="transaction")
 public class Transaction implements Serializable {
@@ -28,34 +33,37 @@ public class Transaction implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id", nullable=false)
 	private Long id;
-	
+
+	@NotNull(message="unable to process, date was not provided")
+	@NotEmpty(message="unable to process, date was not provided")
 	@JsonFormat(pattern="yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	@Column(name="date_", nullable=false, length=10)
 	private Date date;
-	
+
+	@Min(message="unable to process, invalid transaction type", value=1)
+	@Max(message="unable to process, invalid transcation type", value=4)
 	@Column(name="type_", nullable=false)
 	private Integer type;
 	
+	@Min(message="unable to process, the ammount cannot be a negative value", value=0)
 	@Column(nullable=false)
 	private Double amount;
-	
+
+	@Size(message="unable to process, description too long", max=50)
 	@Column(nullable=false, length=50)
 	private String description;
-	
-	@JsonInclude(Include.NON_NULL)
+
+	@NotNull(message="unable to process, account info not provided")
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name="account_id")
-	@JsonIdentityInfo(
-	  generator = ObjectIdGenerators.PropertyGenerator.class, 
-	  property = "id")
 	private Account account;
 	
 	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 	
-	public Transaction() {}
 	
+
 	public Transaction(Long id, Date date, Integer type, Double amount, String description, Account account) {
 		this.id = id;
 		this.date = date;
@@ -112,5 +120,6 @@ public class Transaction implements Serializable {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
-
+	
+	
 }
