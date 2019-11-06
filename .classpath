@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="ClientApp/src/main/java"/>
+	<classpathentry kind="src" path="ClientApp/src/test/java"/>
+	<classpathentry kind="src" path="ServerApp/src/main/java"/>
+	<classpathentry kind="src" path="ServerApp/src/test/java"/>
+	<classpathentry kind="lib" path="ClientApp/target/clientApp-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="ServerApp/target/app-0.0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="output" path="ClientApp/target/classes"/>
+</classpath>

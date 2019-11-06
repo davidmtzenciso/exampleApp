@@ -254,7 +254,7 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testFailedAuthentication() throws JsonProcessingException, Exception {
-		 when(accountServiceMock.getAccountbyIdNPin(Mockito.anyLong(), Mockito.anyInt())).
+		 when(accountServiceMock.getAccountByIdNPin(Mockito.anyLong(), Mockito.anyInt())).
 		 thenThrow(AccountNotFoundException.class);
 		 
 		 mockMvc.perform(post(HOST + API_VERSION + URI_MODULE + URI_AUTH)
@@ -266,7 +266,7 @@ public class AccountControllerTest implements DataInitialization {
 	 
 	 @Test
 	 public void testCorrectAuthentication() throws JsonProcessingException, Exception {
-		 when(accountServiceMock.getAccountbyIdNPin(credentials.getAccountNumber(), credentials.getPin())).thenReturn(this.account);
+		 when(accountServiceMock.getAccountByIdNPin(credentials.getAccountNumber(), credentials.getPin())).thenReturn(this.account);
 		 
 		 mockMvc.perform(post(HOST + API_VERSION + URI_MODULE + URI_AUTH)
 			 		.contentType(MediaType.APPLICATION_JSON_UTF8)

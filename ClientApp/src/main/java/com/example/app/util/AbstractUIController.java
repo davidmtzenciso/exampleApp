@@ -16,11 +16,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractUIController extends HttpCommunication {
-	
-	protected static final String HEADER = "Content-Type";
-	protected static final String VALUE = "application/json; charset=utf-8";
-	protected static final String INTERNAL_ERROR = "Error del sistema, vuelvalo a intentar";
-	protected static final String SERVER_ERROR = "Error with server communication, please try again";
+
+	protected static final String INTERNAL_ERROR = "\nSystem error, please try again";
+	protected static final String SERVER_ERROR = "\nError with server communication, please try again";
 	private final String MALFORMED_REQUEST = "set data and callbacks to handle request";
 	
 	@Autowired
@@ -29,9 +27,10 @@ public abstract class AbstractUIController extends HttpCommunication {
 	protected Object data;
 	protected Consumer<Object> onSuccess;
 	protected Consumer<RequestError> onError;
+	protected Consumer<Integer> onProgress;
 	private CloseableHttpAsyncClient client;
 	
-	protected void post(String url, Class<?> type) throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
+	protected synchronized void post(String url, Class<?> type) throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
 		if(this.isMalformed(data, onSuccess, onError)) {
 			throw new MalformedRequestException(MALFORMED_REQUEST);
 		} else {
@@ -39,7 +38,7 @@ public abstract class AbstractUIController extends HttpCommunication {
 		}
 	}
 	
-	protected void put(String url, Class<?> type) throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
+	protected synchronized void put(String url, Class<?> type) throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
 		if(this.isMalformed(data, onSuccess, onError)) {
 			throw new MalformedRequestException(MALFORMED_REQUEST);
 		} else {
@@ -47,7 +46,7 @@ public abstract class AbstractUIController extends HttpCommunication {
 		}
 	}
 
-	protected void delete(String url, Class<?> type) throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
+	protected synchronized void delete(String url, Class<?> type) throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
 		if(this.isMalformed(data, onSuccess, onError)) {
 			throw new MalformedRequestException(MALFORMED_REQUEST);
 		} else {
@@ -55,7 +54,7 @@ public abstract class AbstractUIController extends HttpCommunication {
 		}
 	}
 	
-	protected void get(String url, Class<?> type) throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
+	protected synchronized void get(String url, Class<?> type) throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
 		if(this.isMalformed(data, onSuccess, onError)) {
 			throw new MalformedRequestException(MALFORMED_REQUEST);
 		} else {
@@ -63,11 +62,11 @@ public abstract class AbstractUIController extends HttpCommunication {
 		}
 	}
 
-	private boolean isMalformed(Object data, Consumer<Object> onSuccess, Consumer<RequestError> onError) {
+	private synchronized boolean isMalformed(Object data, Consumer<Object> onSuccess, Consumer<RequestError> onError) {
 		return data == null || onSuccess == null || onError == null;
 	}
 	
-	private void close(CloseableHttpAsyncClient client) {
+	private synchronized void close(CloseableHttpAsyncClient client) {
 		try {
 			client.close();
 		} catch (IOException e) {
@@ -75,7 +74,7 @@ public abstract class AbstractUIController extends HttpCommunication {
 		}
 	}
 	
-	private String readResponse(HttpResponse response) throws UnsupportedOperationException, IOException {
+	private synchronized String readResponse(HttpResponse response) throws UnsupportedOperationException, IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 		StringBuilder builder = new StringBuilder();
 		reader.lines().forEach(line -> builder.append(line));
@@ -83,8 +82,7 @@ public abstract class AbstractUIController extends HttpCommunication {
 	}
 	
 	private synchronized Consumer<HttpResponse> getDefaultOnResponse(Class<?> type) {
-		return 
-				response -> {
+		return response -> {
 					int status = response.getStatusLine().getStatusCode();
 					if(status == 200) {
 						try {
@@ -103,6 +101,7 @@ public abstract class AbstractUIController extends HttpCommunication {
 							onError.accept(null);
 						}
 					}
+					onProgress.accept(100);
 					close(client);
 				};
 	}
@@ -110,6 +109,7 @@ public abstract class AbstractUIController extends HttpCommunication {
 	private synchronized Consumer<Exception> getDefaultOnError() {
 		return error -> {
 			this.onError.accept(new RequestError(INTERNAL_ERROR));
+			onProgress.accept(100);
 			close(client);
 		};
 	}

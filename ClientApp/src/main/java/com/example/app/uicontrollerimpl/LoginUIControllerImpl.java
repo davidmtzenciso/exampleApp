@@ -21,6 +21,10 @@ public class LoginUIControllerImpl extends AbstractUIController implements Login
 	private URLBuilder builder;
 		
 	private BiConsumer<String, Account> sendResponse;
+	
+	private final String LOGIN_OK = " \nAuthenticated! Welcome";
+	
+	public void run() {}
 			
 	@Override
 	public synchronized LoginUIController setData(Object data) {
@@ -39,11 +43,17 @@ public class LoginUIControllerImpl extends AbstractUIController implements Login
 		this.onError = consumer;
 		return this;
 	}
+	
+	public synchronized LoginUIController setOnProgress(Consumer<Integer> consumer) {
+		this.onProgress = consumer; 
+		return this;
+	}
 
 	@Override
 	public synchronized void authenticate() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException {
-		this.onSuccess = data -> sendResponse.accept("Authenticated! Welcome", (Account) data);
-		this.post(builder.authentication(), Account.class);
+		this.onProgress.accept(0);
+		this.onSuccess = data -> sendResponse.accept(LOGIN_OK, (Account) data);
+		this.post(builder.postCredentials(), Account.class);
 	}
 	
 }

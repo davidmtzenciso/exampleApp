@@ -5,14 +5,16 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.example.app.exceptions.AttemptsExceededException;
 import com.example.app.exceptions.MalformedRequestException;
 import com.example.app.model.Account;
 import com.example.app.uicontroller.HomeUIController;
+import com.example.app.util.AbstractUI;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class HomeUI  {
+public class HomeUI extends AbstractUI {
 	
 	@Autowired
 	private LoginUI loginUI;
@@ -21,18 +23,12 @@ public class HomeUI  {
 	private OperationsUI operationsUI;
 	
 	@Autowired
-	private BufferedReader reader;
+	AnnotationConfigApplicationContext context;
 	
 	@Autowired
 	private HomeUIController uiController;
-		
-	private boolean responseRecived;
-	
-	private final int OPEN_ACCOUNT = 1;
-	private final int LOGIN = 2;
-	private final int EXIT = 3;
+					
 	private final String HOME_MENU = "1-.Open account\n2-.Log in\n3-.Exit\nOption: ";
-	private final String UNSUPPORTED_OPTION = "entry error, non existent option";
 	private final String OPEN_ACCOUNT_SEC = "Open Account\n";
 	private final String PROMPT_FIRST_NAME = "\nFirst name: ";
 	private final String PROMPT_LAST_NAME = "\nLast name:";
@@ -46,16 +42,17 @@ public class HomeUI  {
 	private final String ERROR_ATTEMPTS_EXCEEDED = "attempts exceeded(3), operation canceled";
 	private final String PROMPT_ACCOUT_HOLDERS_ID = "\nAccount's holder ID: ";
 	private final String PROMPT_BALANCE = "\nInitial balance: ";
-	private final String READ_ERROR = "Input Error, please try again";
-	private final String ENTRY_ERROR = "invalid entry, it's not a number\n";
 	private final String EXIT_MSG = "System closed!";
-	
+	private final int OPEN_ACCOUNT = 1;
+	private final int LOGIN = 2;
+	private final int EXIT = 3;
+
 	public void start() {
 		int option = 0;
+		progress = 0;
 		
 		do {
 			try {
-				responseRecived = false;
 				System.out.println(HOME_MENU);
 				option = Integer.parseInt(reader.readLine());
 				switch(option) {
@@ -63,18 +60,14 @@ public class HomeUI  {
 						openAccount();
 						break;
 					case LOGIN:
-						operationsUI.start(loginUI.authenticate());
-						responseRecived = true;
+						operationsUI.start(loginUI.start());
 						break;
 					case EXIT:
 						System.out.println(EXIT_MSG);
-						responseRecived = true;
 						break;
 					default:
 						System.out.println(UNSUPPORTED_OPTION);
-						responseRecived = true;
 				}
-				while(!responseRecived) { System.out.println();}
 			} catch(NumberFormatException e) {
 				System.err.println(READ_ERROR);
 			} 
@@ -92,19 +85,21 @@ public class HomeUI  {
 	
 	private void openAccount() throws UnsupportedEncodingException, JsonProcessingException, MalformedRequestException, IOException, AttemptsExceededException {
 		uiController.setData(this.createAccount(reader))
-		  .setOnSuccess((response, data) -> {
-			  System.out.println(response + ", account number : " + data.getId() + ", pin: "+ data.getPin());
-			  responseRecived = true;
-		  })
-		  .setOnError(error -> {
-			  System.out.println(error.getMessage());
-			  responseRecived = true;
-		  })
-		  .openAccount();
+					  .setOnSuccess((response, data) -> {
+						  System.out.println(response + ", account number : " + data.getId() + ", pin: "+ data.getPin());
+					  })
+					  .setOnError(error -> {
+						  System.out.println(error.getMessage());
+					  })
+					  .setOnProgress(progress -> this.progress = progress)
+					  .openAccount();
+				
+		System.out.print("opening account.");
+		this.waitingResponse();
 	}
 	
 	private Account createAccount(BufferedReader reader) throws IOException, AttemptsExceededException {
-		Account account = new Account();
+		Account account = context.getBean(Account.class);
 		String balance;
 		
 		try {

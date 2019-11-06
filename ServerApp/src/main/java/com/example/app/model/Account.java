@@ -32,7 +32,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Component
-@Scope("prototype")
+@Scope("request")
 @Entity
 @Table(name="account")
 public class Account implements Serializable {

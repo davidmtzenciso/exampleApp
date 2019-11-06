@@ -112,14 +112,25 @@ public class AccountServiceTest implements DataInitialization  {
 	
 	@Test
 	public void testFindByIdAndPinExistent() throws AccountNotFoundException {		
+<<<<<<< HEAD
 		when(accountRepositoryMock.findByIdAndPin(Mockito.anyLong(), Mockito.anyInt()).get()).thenReturn(this.account);
 		Assert.assertNotNull(this.service.getAccountbyIdNPin(Mockito.anyLong(), Mockito.anyInt()));
+=======
+		when(accountRepositoryMock.findByIdAndPin(Mockito.anyLong(), Mockito.anyInt())).thenReturn(this.account);
+		when(transactionRepositoryMock.findByAccount(Mockito.any(Account.class), Mockito.any(Pageable.class))).thenReturn(Page.empty());
+		Assert.assertNotNull(this.service.getAccountByIdNPin(new Long(1), 1234));
+>>>>>>> refs/heads/master
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testFindByIdAndPinNonExistent() throws AccountNotFoundException {
+<<<<<<< HEAD
 		when(accountRepositoryMock.findByIdAndPin(Mockito.anyLong(), Mockito.anyInt()).get()).thenThrow(AccountNotFoundException.class);
 		this.service.getAccountbyIdNPin(new Long(1), 1234);
+=======
+		when(accountRepositoryMock.findByIdAndPin(new Long(1), 1234)).thenReturn(null);
+		this.service.getAccountByIdNPin(new Long(1), 1234);
+>>>>>>> refs/heads/master
 	}
 
 }

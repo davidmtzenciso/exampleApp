@@ -9,13 +9,15 @@ import com.example.app.exceptions.MalformedRequestException;
 import com.example.app.model.RequestError;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public interface OperationsUIController {
+public interface OperationsUIController extends Runnable {
 
 	public OperationsUIController setData(Object data);
 	
 	public OperationsUIController setOnSuccess(BiConsumer<String, Object> consumer);
 	
 	public OperationsUIController setOnError(Consumer<RequestError> consumer);
+	
+	public OperationsUIController setOnProgress(Consumer<Integer> consumer);
 	
 	public void makeDeposit() throws MalformedRequestException, UnsupportedEncodingException, JsonProcessingException, IOException;
 	

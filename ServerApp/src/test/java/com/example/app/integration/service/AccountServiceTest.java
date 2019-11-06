@@ -119,13 +119,13 @@ public class AccountServiceTest implements DataInitialization {
 	
 	@Test
 	public void testGetAccountbyIdNPinExistentWithFirstFive() throws AccountNotFoundException, FailedEntityValidationException {
-		Account account = this.service.getAccountbyIdNPin(new Long(1), 1234);
+		Account account = this.service.getAccountByIdNPin(new Long(1), 1234);
 		Assert.assertEquals(5, account.getTransactions().size());
 	}
 	
 	@Test(expected = AccountNotFoundException.class)
 	public void testGetAccountbyIdNPinNonExistent() throws AccountNotFoundException, FailedEntityValidationException {		
-		this.service.getAccountbyIdNPin(new Long(1252153452), 1234);
+		this.service.getAccountByIdNPin(new Long(1252153452), 1234);
 	}
 	
 	

@@ -39,17 +39,26 @@ public class AppConfig {
 	
 	@Bean
 	public HomeUIController homeUIController() {
-		return new HomeUIControllerImpl();
+		HomeUIController controller = new HomeUIControllerImpl();
+		Thread thread = new Thread(controller);
+		thread.start();
+		return controller;
 	}
 	
 	@Bean
 	public LoginUIController logInUIController() {
-		return new LoginUIControllerImpl();
+		LoginUIController controller = new LoginUIControllerImpl();
+		Thread thread = new Thread(controller);
+		thread.start();
+		return controller;
 	}
 	
 	@Bean
 	public OperationsUIController operationsUIController() {
-		return new OperationsUIControllerImpl();
+		OperationsUIController controller = new OperationsUIControllerImpl();
+		Thread thread = new Thread(controller);
+		thread.start();
+		return controller;
 	}
 	
 	@Bean
