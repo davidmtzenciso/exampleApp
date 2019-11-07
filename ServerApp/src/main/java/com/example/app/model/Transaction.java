@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import com.example.app.model.Account;
@@ -18,10 +19,6 @@ import com.example.app.model.Transaction;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
 @Component
 @Scope("request")
 @Entity
@@ -34,7 +31,7 @@ public class Transaction implements Serializable {
 	private Long id;
 
 	@NotNull(message="unable to process, date was not provided")
-	@NotEmpty(message="unable to process, date was not provided")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	@JsonFormat(pattern="yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	@Column(name="date_", nullable=false, length=10)
@@ -42,13 +39,17 @@ public class Transaction implements Serializable {
 
 	@Min(message="unable to process, invalid transaction type", value=1)
 	@Max(message="unable to process, invalid transcation type", value=4)
+	@NotNull(message="unable to process, transaction type was not provided")
 	@Column(name="type_", nullable=false)
 	private Integer type;
 	
-	@Min(message="unable to process, the ammount cannot be a negative value", value=0)
+	@NotNull(message="unable to process, amount not provided")
+	@Min(message="unable to process, the amount cannot be a negative value", value=0)
 	@Column(nullable=false)
 	private Double amount;
 
+	@NotNull(message="unable to process, description is missing")
+	@NotEmpty(message="unable to process, description is empty")
 	@Size(message="unable to process, description too long", max=50)
 	@Column(nullable=false, length=50)
 	private String description;

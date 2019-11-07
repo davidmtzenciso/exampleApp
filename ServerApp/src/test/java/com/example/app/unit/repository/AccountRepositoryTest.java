@@ -27,7 +27,7 @@ public class AccountRepositoryTest implements DataInitialization {
 	private Account newAccount;
 	
 	private Account saved;
-		
+			
 	@Before
 	public void init() {
 		this.newAccount = this.initialize(this.newAccount);

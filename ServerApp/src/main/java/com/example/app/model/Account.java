@@ -28,9 +28,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 @Component
 @Scope("request")
 @Entity
@@ -141,6 +138,5 @@ public class Account implements Serializable {
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}
-	
 	
 }

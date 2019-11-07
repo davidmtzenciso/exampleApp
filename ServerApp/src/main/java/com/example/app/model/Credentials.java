@@ -10,9 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 @Component
 @Scope("request")
 public class Credentials implements Serializable  {
