@@ -44,20 +44,23 @@ public class Account implements Serializable {
 	@Column(nullable=false)
 	private Integer pin;
 		
-	@NotEmpty(message = "Please provide a first name")
-	@NotNull(message = "Please provide a first name")
+	@NotEmpty(message = "unable to process, please provide a first name")
+	@NotNull(message = "unable to process, please provide a first name")
+	@Size(message = "unable to process, first name provided too long", max=40)
 	@Column(name="first_name", nullable=false, length=40)
 	private String firstName;
 	
-	@NotEmpty(message = "Please provide a last name")
-	@NotNull(message = "Please provide a last name")
+	@NotEmpty(message = "unable to process, please provide a last name")
+	@NotNull(message = "unable to process, please provide a last name")
+	@Size(message="unable to process, last name provided too long", max=60)
 	@Column(name="last_name", nullable=false, length=60)
 	private String lastName;
 
 	@Size(message="unable to process, account's holder id its too long", max=10)
-	@Column(name="account_holders_id", nullable=false, length=10)
+	@Column(name="account_holders_id", nullable=true, length=10)
 	private String accountHoldersId;
 
+	@NotNull
 	@Min(message="unable to process, balance cannot have a negative value", value=0)
 	@Column(nullable=false)
 	private Double balance;

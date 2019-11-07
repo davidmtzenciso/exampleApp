@@ -2,13 +2,14 @@ package com.example.app.unit.repository;
 
 import java.util.NoSuchElementException;
 
+import javax.validation.ConstraintViolationException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -24,53 +25,65 @@ public class AccountRepositoryTest implements DataInitialization {
 	private AccountRepository repository;
 	
 	@Autowired
-	private Account newAccount;
-	
-	private Account saved;
-			
+	private Account entity;
+				
 	@Before
 	public void init() {
-		this.newAccount = this.initialize(this.newAccount);
+		this.entity = this.initialize(this.entity);
 	}
 	
-	//			SAVE ACCOUNT TESTS
+	//			#### SAVE ACCOUNT TESTS #####
 	
-	@Test(expected = DataIntegrityViolationException.class)
-	public void testSaveWithoutFirstName() {		
-		this.newAccount.setFirstName(null);
-		this.saved = this.repository.save(this.newAccount);
+	
+	// 		FIRST NAME VALIDATIONS
+	
+	@Test(expected = ConstraintViolationException.class)
+	public void testSaveWithNullFirstName() {		
+		this.entity.setFirstName(null);
+		this.repository.save(this.entity);
 	}
 	
-	@Test(expected = DataIntegrityViolationException.class)
+	@Test(expected = ConstraintViolationException.class)
+	public void testSaveWithEmptyFirstName() {		
+		this.entity.setFirstName("");
+		this.repository.save(this.entity);
+	}
+	
+	@Test(expected = ConstraintViolationException.class)
+	public void testSaveWithInvalidSizeFirstName() {		
+		StringBuilder builder = new StringBuilder();
+		
+		for(int i=0; i < 51; i++) {
+			builder.append("a");
+		}
+		entity.setFirstName(builder.toString());
+		this.repository.save(this.entity);
+	}
+	
+	@Test(expected = ConstraintViolationException.class)
 	public void testSaveWithoutLastName() {		
-		this.newAccount.setLastName(null);
-		this.saved = this.repository.save(this.newAccount);
+		this.entity.setLastName(null);
+		 this.repository.save(this.entity);
 	}
 	
-	@Test(expected = DataIntegrityViolationException.class)
+	@Test(expected = ConstraintViolationException.class)
 	public void testSaveWithoutPin() {		
-		this.newAccount.setPin(null);		
-		this.saved = this.repository.save(this.newAccount);
-	}
-	
-	@Test
-	public void testSaveWithAllProperties() {
-		this.saved = this.repository.save(this.newAccount);
-		Assert.assertNotNull(saved);
+		this.entity.setPin(null);		
+		this.repository.save(this.entity);
 	}
 	
 	//		FIND BY ID AND PIN TESTS
 	
 	@Test
 	public void testFindByIdAndPinWithCorrectIdAndIncorrectPin() {
-		this.saved = this.repository.save(this.newAccount);
-		Assert.assertFalse(this.repository.findByIdAndPin(this.saved.getId(), 1111).isPresent());
+		Account saved = this.repository.save(this.entity);
+		Assert.assertFalse(this.repository.findByIdAndPin(saved.getId(), 1111).isPresent());
 	}
 	
 	@Test
 	public void testFindByIdAndPinWithIncorrectIdAndCorrentPin() {
-		this.saved = this.repository.save(this.newAccount);
-		Assert.assertFalse(this.repository.findByIdAndPin(new Long(1231432), this.saved.getPin()).isPresent());
+		Account saved = this.repository.save(this.entity);
+		Assert.assertFalse(this.repository.findByIdAndPin(new Long(1231432), saved.getPin()).isPresent());
 	}
 	
 	@Test
@@ -80,8 +93,8 @@ public class AccountRepositoryTest implements DataInitialization {
 	
 	@Test
 	public void testFindByIdAndPinWithCorrectIdAndPin() {
-		this.saved = this.repository.save(this.newAccount);
-		Assert.assertFalse(this.repository.findByIdAndPin(this.saved.getId(), this.saved.getPin()).isPresent());
+		Account saved = this.repository.save(this.entity);
+		Assert.assertFalse(this.repository.findByIdAndPin(saved.getId(), saved.getPin()).isPresent());
 	}
 	
 	//		FIND AND LOCK BY ID
@@ -93,14 +106,14 @@ public class AccountRepositoryTest implements DataInitialization {
 	
 	@Test(expected = NoSuchElementException.class)
 	public void testFindAndLockByIdWithlocked() {
-		this.saved = this.repository.save(this.newAccount);
-		this.repository.findAndLockById(this.saved.getId()).get();
+		Account saved = this.repository.save(this.entity);
+		this.repository.findAndLockById(saved.getId()).get();
 	}
 	
 	@Test
 	public void testFindAndLockByIdWithCorrectIdAndUnlocked() {
-		this.saved = this.repository.save(this.newAccount);
-		Assert.assertTrue(this.repository.findAndLockById(this.saved.getId()).isPresent());
+		Account saved = this.repository.save(this.entity);
+		Assert.assertTrue(this.repository.findAndLockById(saved.getId()).isPresent());
 	}
 	
 	// 		DELETE ACCOUNT TESTS
@@ -112,8 +125,8 @@ public class AccountRepositoryTest implements DataInitialization {
 	
 	@Test
 	public void testDeleteWithCorrectId() {
-		this.saved = this.repository.save(this.newAccount);
-		this.repository.deleteById(this.saved.getId());
+		Account saved = this.repository.save(this.entity);
+		this.repository.deleteById(saved.getId());
 	}
 	
 }

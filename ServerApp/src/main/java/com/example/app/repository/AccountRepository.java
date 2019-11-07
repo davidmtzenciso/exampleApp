@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import com.example.app.model.Account;
 
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public interface AccountRepository extends JpaRepository<Account, Long>{
+public interface AccountRepository extends JpaRepository<Account, Long> {
 	
 	public Optional<Account> findByIdAndPin(Long id, Integer pin);
 	
