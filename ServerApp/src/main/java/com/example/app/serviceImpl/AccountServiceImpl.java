@@ -2,7 +2,6 @@ package com.example.app.serviceImpl;
 
 
 import java.util.NoSuchElementException;
-import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -33,27 +32,19 @@ public class AccountServiceImpl implements AccountService {
 	
 	@Override
 	public void deleteAccount(Long id) throws OverdrawnAccountException, AccountNotFoundException {
-			Account lockedAccount;
+		Account lockedAccount;
 			
-<<<<<<< HEAD
-			try {
-				lockedAccount = repository.findAndLockById(id).get();
-				if(lockedAccount.getBalance() >= 0) {
-					repository.delete(lockedAccount);
-=======
-			if(lockedAccount != null) {
-				comparison = Double.compare(lockedAccount.getBalance(), 0.0);
-				if(comparison >= 0) {
-					accountRepository.delete(lockedAccount);
-					return CLOSE_ACCOUNT_OK;
->>>>>>> refs/heads/master
-				}
-				else {
-					throw new OverdrawnAccountException(OVERDRAWN);
-				}
-			} catch(NoSuchElementException e) {
-				throw new AccountNotFoundException(NOT_FOUND);
+		try {
+			lockedAccount = repository.findAndLockById(id).get();
+			if(lockedAccount.getBalance() >= 0) {
+				repository.delete(lockedAccount);
 			}
+			else {
+				throw new OverdrawnAccountException(OVERDRAWN);
+			}
+		} catch(NoSuchElementException e) {
+			throw new AccountNotFoundException(NOT_FOUND);
+		}
 	}
 	
 	@Override
@@ -64,27 +55,12 @@ public class AccountServiceImpl implements AccountService {
 			throw new AccountNotFoundException(NOT_FOUND);
 		}
 	}
-	
+
 	@Override
-<<<<<<< HEAD
-	public Account getAccountbyIdNPin(Long id, Integer pin) throws AccountNotFoundException {
+	public Account getAccountByIdNPin(Long id, Integer pin) throws AccountNotFoundException {
 		try {
 			return repository.findByIdAndPin(id, pin).get();
 		} catch(NoSuchElementException e) {
-=======
-	public Account getAccountByIdNPin(Long id, Integer pin) throws AccountNotFoundException {
-		Account account = accountRepository.findByIdAndPin(id, pin);
-		Pageable firstFiveByDate;
-		List<Transaction> list;
-		
-		if(account != null) {
-			firstFiveByDate = PageRequest.of(0, 5, Sort.by("date").ascending());
-			list = this.transactionRepository.findByAccount(account, firstFiveByDate).getContent();
-			list.forEach(transaction -> transaction.setAccount(null));
-			account.setTransactions(list);
-			return account;
-		} else {
->>>>>>> refs/heads/master
 			throw new AccountNotFoundException(LOGIN_FAILED);
 		}
 	}

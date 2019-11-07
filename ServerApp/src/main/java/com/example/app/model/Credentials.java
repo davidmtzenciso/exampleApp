@@ -2,25 +2,16 @@ package com.example.app.model;
 
 import java.io.Serializable;
 
-<<<<<<< HEAD
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-=======
->>>>>>> refs/heads/master
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-<<<<<<< HEAD
 import lombok.Data;
 import lombok.NoArgsConstructor;
-=======
-@Component
-@Scope("request")
-public class Credentials implements Serializable  {
->>>>>>> refs/heads/master
 
 @Component
 @Scope("request")

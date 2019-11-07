@@ -54,7 +54,7 @@ public class DebitsCheckController {
 					consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, 
 					produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody Account authenticate(@RequestBody Credentials credentials) throws AccountNotFoundException {
-		return this.accountService.getAccountbyIdNPin(credentials.getAccountNumber(), credentials.getPin());
+		return this.accountService.getAccountByIdNPin(credentials.getAccountNumber(), credentials.getPin());
 	}
 	
 	@RequestMapping(value = "/deposit", method = RequestMethod.POST,	

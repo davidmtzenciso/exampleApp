@@ -2,9 +2,7 @@ package com.example.app.service;
 
 import java.util.List;
 
-import com.example.app.exception.AccountNotFoundException;
 import com.example.app.exception.FailedEntityValidationException;
-import com.example.app.exception.InsufficientFundsException;
 import com.example.app.exception.TransactionsNotFoundException;
 import com.example.app.model.Account;
 import com.example.app.model.Transaction;
