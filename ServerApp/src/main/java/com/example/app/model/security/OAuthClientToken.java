@@ -3,8 +3,8 @@ package com.example.app.model.security;
 import javax.persistence.*;
 
 @Entity
-@Table(name="oauth_refresh_token")
-public class OauthRefreshToken {
+@Table(name="oauth_client_token")
+public class OAuthClientToken {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +18,14 @@ public class OauthRefreshToken {
 	@Column(name="token", columnDefinition = "mediumblob")
 	private byte[] token;
 	
-	@Lob
-	@Column(name="authentication", columnDefinition = "mediumblob")
-	private byte[] authentication;
+	@Column(name="authentication_id")
+	private String authenticationId;
+	
+	@Column(name="user_name")
+	private String userName;
+	
+	@Column(name="client_id")
+	private String clientId;
 
 	public Integer getId() {
 		return id;
@@ -46,11 +51,29 @@ public class OauthRefreshToken {
 		this.token = token;
 	}
 
-	public byte[] getAuthentication() {
-		return authentication;
+	public String getAuthenticationId() {
+		return authenticationId;
 	}
 
-	public void setAuthentication(byte[] authentication) {
-		this.authentication = authentication;
+	public void setAuthenticationId(String authenticationId) {
+		this.authenticationId = authenticationId;
 	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	
 }

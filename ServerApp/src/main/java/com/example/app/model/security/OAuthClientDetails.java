@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="oauth_client_details")
-public class OauthClientDetails {
+public class OAuthClientDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

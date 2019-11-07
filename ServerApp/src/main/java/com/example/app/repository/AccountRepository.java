@@ -10,12 +10,9 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.annotation.Propagation;
 
 import com.example.app.model.Account;
 
-@Transactional(propagation = Propagation.REQUIRES_NEW)
 public interface AccountRepository extends JpaRepository<Account, Long> {
 	
 	public Optional<Account> findByIdAndPin(Long id, Integer pin);

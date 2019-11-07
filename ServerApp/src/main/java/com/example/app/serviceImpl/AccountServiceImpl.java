@@ -6,6 +6,8 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.app.exception.AccountNotFoundException;
 import com.example.app.exception.FailedEntityValidationException;
@@ -16,6 +18,7 @@ import com.example.app.repository.AccountRepository;
 import com.example.app.service.AccountService;
 
 @Service
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class AccountServiceImpl implements AccountService {
 	
 	@Autowired

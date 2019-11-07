@@ -5,8 +5,13 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("request")
 @Entity
-@Table(name="user", uniqueConstraints = @UniqueConstraint(columnNames = {"userName"}, name="USER_UNIQUE_USERNAME"))
+@Table(name="user_", uniqueConstraints = @UniqueConstraint(columnNames = {"userName"}, name="USER_UNIQUE_USERNAME"))
 public class User {
 
 	@Id

@@ -10,6 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.app.exception.FailedEntityValidationException;
 import com.example.app.exception.TransactionsNotFoundException;
@@ -19,6 +21,7 @@ import com.example.app.repository.TransactionRepository;
 import com.example.app.service.TransactionService;
 
 @Service
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class TransactionServiceImpl implements TransactionService {
 
 	@Autowired

@@ -20,8 +20,8 @@
         <start-class>com.example.app.App</start-class>
         <java.version>1.8</java.version>
         <spring.loaded.version>1.2.8.RELEASE</spring.loaded.version>
+        <auth2.version>2.2.0.RELEASE</auth2.version>
         <lombok.version>1.14.8</lombok.version>
-        <rest.assured.version>2.3.3</rest.assured.version>
         <hibernate.version>5.4.6.Final</hibernate.version>
         <cucumber.version>4.6.0</cucumber.version>
         <mockito.version>3.0.0</mockito.version>
@@ -39,10 +39,19 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+		    <groupId>org.springframework.security.oauth.boot</groupId>
+		    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+		    <version>${auth2.version}</version>
+		</dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

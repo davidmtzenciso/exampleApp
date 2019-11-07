@@ -1,6 +1,7 @@
 package com.example.app.model.security;
 
 import javax.persistence.*;
+
 @Entity
 @Table(name = "authority", uniqueConstraints = @UniqueConstraint(columnNames = {"name"}, name="AUTHORITY_UNIQUE_NAME"))
 public class Authority {
@@ -12,6 +13,10 @@ public class Authority {
 
 	@Column(length=20)
 	private String name;
+	
+	public Authority(String name) {
+		this.name = name;
+	}
 
 	public Integer getId() {
 		return id;
