@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Component
-@Scope("request")
+@Scope("prototype")
 @Entity
 @Table(name="transaction")
 public class Transaction implements Serializable {

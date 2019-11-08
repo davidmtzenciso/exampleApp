@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("request")
+@Scope("prototype")
 public class CustomGrantedAuthority implements GrantedAuthority {
 
 	private static final long serialVersionUID = 1L;

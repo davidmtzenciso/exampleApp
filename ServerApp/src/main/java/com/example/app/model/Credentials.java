@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Component
-@Scope("request")
+@Scope("prototype")
 public class Credentials implements Serializable  {
 	
 	@NotNull(message="unable to process, no account number was provided")

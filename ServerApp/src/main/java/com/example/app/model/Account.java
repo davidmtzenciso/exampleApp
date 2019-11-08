@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Component
-@Scope("request")
+@Scope("prototype")
 @Entity
 @Table(name="account")
 public class Account implements Serializable {
