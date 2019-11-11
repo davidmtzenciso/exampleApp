@@ -2,6 +2,11 @@ package com.example.app.model.security;
 
 import javax.persistence.*;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("request")
 @Entity
 @Table(name="oauth_client_token")
 public class OAuthClientToken {

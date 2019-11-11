@@ -66,4 +66,15 @@ public class ControllerSecurityTest {
     		      .param("id", "1"))
     		      .andExpect(status().isUnauthorized());
     }
+    
+    @Test
+    public void givenInvalidRole_whenGetSecureRequest_thenForbidden() throws Exception {
+        String accessToken = obtainAccessToken("user1", "pass");
+        mockMvc.perform(get("/employee")
+          .header("Authorization", "Bearer " + accessToken)
+          .param("email", "jim@yahoo.com"))
+          .andExpect(status().isForbidden());
+    }
+    
+    
 }

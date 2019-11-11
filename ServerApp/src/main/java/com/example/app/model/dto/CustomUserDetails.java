@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("prototype")
+@Scope("request")
 public class CustomUserDetails implements UserDetails {
 
 	private static final long serialVersionUID = 1L;

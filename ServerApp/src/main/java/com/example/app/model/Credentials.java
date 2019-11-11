@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Component
-@Scope("prototype")
+@Scope("request")
 public class Credentials implements Serializable  {
 	
 	@NotNull(message="unable to process, no account number was provided")
@@ -25,7 +25,7 @@ public class Credentials implements Serializable  {
 	@JsonIgnore
 	private static final long serialVersionUID = 7031738121556269844L;
 	
-	
+	public Credentials() {}
 
 	public Credentials(Long accountNumber, Integer pin) {
 		this.accountNumber = accountNumber;
