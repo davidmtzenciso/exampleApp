@@ -1,18 +1,23 @@
 package com.example.app.conf;
 
+import java.security.KeyPair;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerEndpointsConfiguration;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
@@ -22,12 +27,15 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+@Import(AuthorizationServerEndpointsConfiguration.class)
 @Configuration
 @EnableAuthorizationServer
 public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	private KeyPair keyPair;
+	
 
 	@Autowired
 	@Qualifier("dataSource")
@@ -35,6 +43,14 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
 	@Autowired
 	private UserDetailsService userDetailsService;
+	
+	public void JwkSetConfiguration(AuthenticationConfiguration authenticationConfiguration,
+			KeyPair keyPair) throws Exception {
+
+		this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
+		this.keyPair = keyPair;
+	}
+
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
@@ -61,7 +77,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		converter.setSigningKey("123");
+		converter.setKeyPair(keyPair);
 		return converter;
 	}
 
