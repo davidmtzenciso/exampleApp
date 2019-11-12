@@ -6,6 +6,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 
 @Configuration
 class JwkSetEndpointConfiguration extends AuthorizationServerSecurityConfiguration {
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		super.configure(http);

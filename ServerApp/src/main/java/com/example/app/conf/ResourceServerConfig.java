@@ -2,8 +2,10 @@ package com.example.app.conf;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
@@ -16,6 +18,7 @@ import org.springframework.security.oauth2.provider.token.ResourceServerTokenSer
 
 @Configuration
 @EnableResourceServer
+@EnableConfigurationProperties(SecurityProperties.class)
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	
 	private static final String RESOURCE_ID = "resource-server-rest-api";
@@ -44,7 +47,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.httpBasic().disable().anonymous().and().authorizeRequests().antMatchers("/account/**").authenticated()
-				.antMatchers("/login/**").permitAll();
+		http.httpBasic().disable()
+						.anonymous()
+						.and()
+						.authorizeRequests()
+						.antMatchers(HttpMethod.POST, "/account/**").authenticated()
+						.antMatchers(HttpMethod.DELETE, "/account/**").authenticated()
+						.antMatchers(HttpMethod.GET, "/account/**").authenticated()
+						.antMatchers(HttpMethod.POST,"/login/**").permitAll();
 	}
 }
