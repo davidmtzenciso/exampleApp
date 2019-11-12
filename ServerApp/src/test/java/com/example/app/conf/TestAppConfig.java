@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import com.example.app.model.Account;
 import com.example.app.model.Credentials;
 import com.example.app.model.Transaction;
+import com.example.app.model.dto.CustomUserDetails;
 
 @Configuration
 public class TestAppConfig {
@@ -27,5 +28,11 @@ public class TestAppConfig {
 	@Scope("prototype")
 	public Credentials credentials() {
 		return new Credentials();
+	}
+	
+	@Bean
+	@Scope("prototype")
+	public CustomUserDetails customuserDetails() {
+		return new CustomUserDetails();
 	}
 }
