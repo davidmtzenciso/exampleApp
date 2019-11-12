@@ -1,0 +1,7 @@
+## "ignore files" 
+
+## project config files
+.project
+.classpath
+
+## 

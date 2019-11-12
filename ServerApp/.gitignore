@@ -1,1 +1,9 @@
 /target/
+
+## config files ##
+.springBeans
+.classpath
+pom.xml
+
+## eclipse config ##
+/.settings/
