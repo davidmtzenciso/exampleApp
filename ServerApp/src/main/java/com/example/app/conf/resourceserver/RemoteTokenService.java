@@ -1,4 +1,4 @@
-package com.example.app.conf;
+package com.example.app.conf.resourceserver;
 
 import java.io.IOException;
 import java.util.Map;

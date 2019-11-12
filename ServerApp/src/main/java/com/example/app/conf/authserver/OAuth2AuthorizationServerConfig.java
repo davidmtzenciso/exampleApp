@@ -1,4 +1,4 @@
-package com.example.app.conf;
+package com.example.app.conf.authserver;
 
 import java.security.KeyPair;
 
@@ -6,10 +6,12 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,16 +28,16 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 @Import(AuthorizationServerEndpointsConfiguration.class)
 @Configuration
 @EnableAuthorizationServer
+@EnableConfigurationProperties(SecurityProperties.class)
 public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	private KeyPair keyPair;
-	
 
 	@Autowired
 	@Qualifier("dataSource")
@@ -44,18 +46,22 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
+	@Autowired
+	private SecurityProperties securityProperties;
+	
 	public void JwkSetConfiguration(AuthenticationConfiguration authenticationConfiguration,
 			KeyPair keyPair) throws Exception {
 
 		this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
-		this.keyPair = keyPair;
 	}
 
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(tokenStore()).accessTokenConverter(accessTokenConverter())
-				.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
+		endpoints.tokenStore(tokenStore())
+				 .accessTokenConverter(accessTokenConverter())
+				 .authenticationManager(authenticationManager)
+				 .userDetailsService(userDetailsService);
 	}
 
 	@Bean
@@ -64,19 +70,21 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 	}
 	
 	@Override
-        public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
-                oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("permitAll()");
-        }
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
+        oauthServer.tokenKeyAccess("permitAll()")
+        		   .checkTokenAccess("permitAll()")
+        		   .passwordEncoder(passwordEncoder());
+    }
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		JdbcClientDetailsService jdbcClientDetailsService = new JdbcClientDetailsService(dataSource);
-		clients.withClientDetails(jdbcClientDetailsService);
+		clients.withClientDetails(new JdbcClientDetailsService(dataSource));
 	}
 
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		KeyPair keyPair = keyPair(securityProperties, keyStoreKeyFactory(securityProperties));
 		converter.setKeyPair(keyPair);
 		return converter;
 	}
@@ -91,8 +99,15 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 	}
 
 	@Bean
-	public PasswordEncoder userPasswordEncoder() {
+	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(4);
 	}
 
+	private KeyPair keyPair(SecurityProperties jwtProperties, KeyStoreKeyFactory keyStoreKeyFactory) {
+        return keyStoreKeyFactory.getKeyPair(jwtProperties.getKeyPairAlias(), jwtProperties.getKeyPairPassword().toCharArray());
+    }
+
+    private KeyStoreKeyFactory keyStoreKeyFactory(SecurityProperties jwtProperties) {
+        return new KeyStoreKeyFactory((Resource) jwtProperties.getKeyStore(), jwtProperties.getKeyStorePassword().toCharArray());
+    }
 }
