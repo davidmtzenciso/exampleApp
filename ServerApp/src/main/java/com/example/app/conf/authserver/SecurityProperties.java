@@ -7,40 +7,53 @@ import org.springframework.core.io.Resource;
 @ConfigurationProperties("security")
 public class SecurityProperties {
 
-	private Resource keyStore;
-    private String keyStorePassword;
-    private String keyPairAlias;
-    private String keyPairPassword;
+	private JwtProperties jwt;
 
-    public Resource getKeyStore() {
-        return keyStore;
+    public JwtProperties getJwt() {
+        return jwt;
     }
 
-    public void setKeyStore(Resource keyStore) {
-        this.keyStore = keyStore;
+    public void setJwt(JwtProperties jwt) {
+        this.jwt = jwt;
     }
 
-    public String getKeyStorePassword() {
-        return keyStorePassword;
-    }
+    public static class JwtProperties {
 
-    public void setKeyStorePassword(String keyStorePassword) {
-        this.keyStorePassword = keyStorePassword;
-    }
+        private Resource keyStore;
+        private String keyStorePassword;
+        private String keyPairAlias;
+        private String keyPairPassword;
 
-    public String getKeyPairAlias() {
-        return keyPairAlias;
-    }
+        public Resource getKeyStore() {
+            return keyStore;
+        }
 
-    public void setKeyPairAlias(String keyPairAlias) {
-        this.keyPairAlias = keyPairAlias;
-    }
+        public void setKeyStore(Resource keyStore) {
+            this.keyStore = keyStore;
+        }
 
-    public String getKeyPairPassword() {
-        return keyPairPassword;
-    }
+        public String getKeyStorePassword() {
+            return keyStorePassword;
+        }
 
-    public void setKeyPairPassword(String keyPairPassword) {
-        this.keyPairPassword = keyPairPassword;
+        public void setKeyStorePassword(String keyStorePassword) {
+            this.keyStorePassword = keyStorePassword;
+        }
+
+        public String getKeyPairAlias() {
+            return keyPairAlias;
+        }
+
+        public void setKeyPairAlias(String keyPairAlias) {
+            this.keyPairAlias = keyPairAlias;
+        }
+
+        public String getKeyPairPassword() {
+            return keyPairPassword;
+        }
+
+        public void setKeyPairPassword(String keyPairPassword) {
+            this.keyPairPassword = keyPairPassword;
+        }
     }
 }

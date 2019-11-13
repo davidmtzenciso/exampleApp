@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -104,10 +103,10 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 	}
 
 	private KeyPair keyPair(SecurityProperties jwtProperties, KeyStoreKeyFactory keyStoreKeyFactory) {
-        return keyStoreKeyFactory.getKeyPair(jwtProperties.getKeyPairAlias(), jwtProperties.getKeyPairPassword().toCharArray());
+        return keyStoreKeyFactory.getKeyPair(jwtProperties.getJwt().getKeyPairAlias(), jwtProperties.getJwt().getKeyPairPassword().toCharArray());
     }
 
     private KeyStoreKeyFactory keyStoreKeyFactory(SecurityProperties jwtProperties) {
-        return new KeyStoreKeyFactory((Resource) jwtProperties.getKeyStore(), jwtProperties.getKeyStorePassword().toCharArray());
+        return new KeyStoreKeyFactory(jwtProperties.getJwt().getKeyStore(), jwtProperties.getJwt().getKeyStorePassword().toCharArray());
     }
 }

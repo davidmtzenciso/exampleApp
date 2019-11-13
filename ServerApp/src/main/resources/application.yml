@@ -1,7 +1,7 @@
 security:
   jwt:
-    key-store: classpath:keystore.jks
-    key-store-password: letmein
-    key-pair-alias: mytestkey
-    key-pair-password: changeme
+    key-store: classpath:mystore.keystore
+    key-store-password: RiNgO2785
+    key-pair-alias: spring_store
+    key-pair-password: RiNgO2785
     public-key: classpath:public.txt

@@ -84,7 +84,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private String getPublicKeyAsString() {
         try {
-            return IOUtils.toString(securityProperties.getPublicKey().getInputStream(), UTF_8);
+            return IOUtils.toString(securityProperties.getJwt().getPublicKey().getInputStream(), UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

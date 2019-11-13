@@ -9,13 +9,26 @@ import org.springframework.core.io.Resource;
 @ConfigurationProperties("security")
 public class SecurityProperties {
 
-	private Resource publicKey;
+	private JwtProperties jwt;
 
-    public Resource getPublicKey() {
-        return publicKey;
+    public JwtProperties getJwt() {
+        return jwt;
     }
 
-    public void setPublicKey(Resource publicKey) {
-        this.publicKey = publicKey;
+    public void setJwt(JwtProperties jwt) {
+        this.jwt = jwt;
+    }
+
+    public static class JwtProperties {
+
+        private Resource publicKey;
+
+        public Resource getPublicKey() {
+            return publicKey;
+        }
+
+        public void setPublicKey(Resource publicKey) {
+            this.publicKey = publicKey;
+        }
     }
 }

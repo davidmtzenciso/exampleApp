@@ -32,7 +32,7 @@ public class TestAppConfig {
 	
 	@Bean
 	@Scope("prototype")
-	public CustomUserDetails customuserDetails() {
+	public CustomUserDetails customUserDetails() {
 		return new CustomUserDetails();
 	}
 	
