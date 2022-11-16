@@ -17,7 +17,7 @@
         <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
         <spring.version>5.1.10.RELEASE</spring.version>
         <httpasyncclient.version>4.1.1</httpasyncclient.version>
-        <jackson.version>2.9.10</jackson.version>
+        <jackson.version>2.12.7.1</jackson.version>
         <junit5.version>5.5.2</junit5.version>
     </properties>
 
