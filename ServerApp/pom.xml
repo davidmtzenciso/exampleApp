@@ -24,7 +24,7 @@
         <spring.security.jwt.version>1.0.9.RELEASE</spring.security.jwt.version>
         <lombok.version>1.14.8</lombok.version>
         <hibernate.version>5.4.6.Final</hibernate.version>
-        <nimbus.version>8.2</nimbus.version>
+        <nimbus.version>9.37.2</nimbus.version>
         <cucumber.version>4.6.0</cucumber.version>
         <mockito.version>3.0.0</mockito.version>
         <junit.version>4.12</junit.version>
